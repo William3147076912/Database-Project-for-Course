@@ -1,7 +1,8 @@
 # 作业/考试
+DROP TABLE IF EXISTS Assignment;
 CREATE TABLE Assignment
 (
-    assignment_id   INT PRIMARY KEY AUTO_INCREMENT,
+    assignment_id   INT PRIMARY KEY AUTO_INCREMENT COMMENT '作业/考试ID',
     course_id       INT                         NOT NULL COMMENT '关联的课程ID',
     creator_id      INT                         NOT NULL COMMENT '创建作业/考试的教师ID',
     assignment_type ENUM ('Assignment', 'Exam') NOT NULL COMMENT '评估类型：作业、考试',
@@ -12,4 +13,4 @@ CREATE TABLE Assignment
     creation_time   DATETIME                    NOT NULL COMMENT '作业/考试创建时间'
     #     FOREIGN KEY (course_id) REFERENCES Course (course_id),
     #     FOREIGN KEY (creator_id) REFERENCES User (user_id)
-);
+) COMMENT '作业/考试';

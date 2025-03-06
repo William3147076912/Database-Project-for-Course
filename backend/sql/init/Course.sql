@@ -1,7 +1,8 @@
 # 课程
+DROP TABLE IF EXISTS Course;
 CREATE TABLE Course
 (
-    course_id     INT PRIMARY KEY AUTO_INCREMENT,
+    course_id     INT PRIMARY KEY AUTO_INCREMENT COMMENT '课程id',
     name          VARCHAR(200)                                            NOT NULL COMMENT '课程标题（如“Python编程入门”）',
     description   TEXT                                                    NOT NULL COMMENT '课程简要描述',
     objectives    TEXT COMMENT '课程学习目标',
@@ -15,4 +16,4 @@ CREATE TABLE Course
     course_type   VARCHAR(50)                                             NOT NULL COMMENT '课程类型（如“公开课”“必修课”）'
     #     FOREIGN KEY (reviewer_id) REFERENCES User (user_id),
     #     FOREIGN KEY (creator_id) REFERENCES User (user_id)
-);
+) COMMENT '课程管理';

@@ -1,7 +1,8 @@
 # 教学资源
+DROP TABLE IF EXISTS Resource;
 CREATE TABLE Resource
 (
-    resource_id   INT PRIMARY KEY AUTO_INCREMENT,
+    resource_id   INT PRIMARY KEY AUTO_INCREMENT COMMENT '资源ID',
     course_id     INT                                                 NOT NULL COMMENT '资源所属课程ID',
     uploader_id   INT                                                 NOT NULL COMMENT '上传资源的教师ID',
     resource_name VARCHAR(200)                                        NOT NULL COMMENT '资源文件名称（如“第1章课件.pdf”）',
@@ -10,4 +11,4 @@ CREATE TABLE Resource
     upload_time   DATETIME                                            NOT NULL COMMENT '资源上传时间'
     #     FOREIGN KEY (course_id) REFERENCES Course (course_id),
     #     FOREIGN KEY (uploader_id) REFERENCES User (user_id)
-);
+) COMMENT = '教学资源';

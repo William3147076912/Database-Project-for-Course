@@ -1,4 +1,5 @@
 # 成绩
+DROP TABLE IF EXISTS Grade;
 CREATE TABLE Grade
 (
     submission_id INT PRIMARY KEY COMMENT '关联的作业提交记录ID',
@@ -8,4 +9,4 @@ CREATE TABLE Grade
     comments      TEXT COMMENT '教师对作业的反馈评语'
     #     FOREIGN KEY (submission_id) REFERENCES Submission (submission_id),
     #     FOREIGN KEY (grader_id) REFERENCES User (user_id)
-);
+) COMMENT = '成绩';

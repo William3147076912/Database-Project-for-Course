@@ -1,7 +1,8 @@
 # 选课记录表
+DROP TABLE IF EXISTS CourseEnrollment;
 CREATE TABLE CourseEnrollment
 (
-    enrollment_id   INT PRIMARY KEY AUTO_INCREMENT,
+    enrollment_id   INT PRIMARY KEY AUTO_INCREMENT COMMENT '选课记录ID',
     student_id      INT                              NOT NULL COMMENT '选课学生ID',
     course_id       INT                              NOT NULL COMMENT '选修的课程ID',
     enrollment_time DATETIME                         NOT NULL COMMENT '学生选课时间',
@@ -9,4 +10,4 @@ CREATE TABLE CourseEnrollment
     completion_time DATETIME COMMENT '课程完成时间（仅当状态为“完成”时有效）'
     #     FOREIGN KEY (student_id) REFERENCES User (user_id),
     #     FOREIGN KEY (course_id) REFERENCES Course (course_id)
-);
+) COMMENT '选课记录表';
