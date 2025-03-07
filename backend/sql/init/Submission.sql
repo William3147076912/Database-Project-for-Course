@@ -7,15 +7,14 @@ CREATE TABLE Submission
     student_id           INT                          NOT NULL COMMENT '提交作业的学生ID',
     content_or_file_path TEXT                         NOT NULL COMMENT '提交的文本内容或文件存储路径（如 /submissions/assignment1_student001.txt）',
     submission_time      DATETIME                     NOT NULL COMMENT '作业提交时间',
-    status               ENUM ('Submitted', 'Graded') NOT NULL COMMENT '提交状态：已提交、已评分',
-#     FOREIGN KEY (assessment_id) REFERENCES Assignment (assignment_id) COMMENT '外键：关联作业/考试表的assignment_id',
-#     FOREIGN KEY (student_id) REFERENCES User (user_id) COMMENT '外键：关联用户表的user_id'
+    status               ENUM ('Submitted', 'Graded') NOT NULL COMMENT '提交状态：已提交、已评分'
+    #     FOREIGN KEY (assessment_id) REFERENCES Assignment (assignment_id) COMMENT '外键：关联作业/考试表的assignment_id',
+    #     FOREIGN KEY (student_id) REFERENCES User (user_id) COMMENT '外键：关联用户表的user_id'
 ) COMMENT '作业提交记录';
 
 -- 插入示例数据
 INSERT INTO Submission (assessment_id, student_id, content_or_file_path, submission_time, status)
-VALUES
-(1, 3, '/submissions/assignment1_student001.txt', '2023-11-02 12:00:00', 'Graded'),
-(2, 3, '/submissions/exam1_student001.txt', '2023-11-16 12:00:00', 'Graded'),
-(1, 4, '/submissions/assignment1_student002.txt', '2023-11-02 12:00:00', 'Graded'),
-(2, 4, '/submissions/exam1_student002.txt', '2023-11-16 12:00:00', 'Graded');
+VALUES (1, 3, '/submissions/assignment1_student001.txt', '2023-11-02 12:00:00', 'Graded'),
+       (2, 3, '/submissions/exam1_student001.txt', '2023-11-16 12:00:00', 'Graded'),
+       (1, 4, '/submissions/assignment1_student002.txt', '2023-11-02 12:00:00', 'Graded'),
+       (2, 4, '/submissions/exam1_student002.txt', '2023-11-16 12:00:00', 'Graded');
