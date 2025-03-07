@@ -69,7 +69,7 @@
                <dict-tag :options="sys_normal_disable" :value="scope.row.status" />
             </template>
          </el-table-column>
-         <el-table-column label="创建时间" align="center" prop="createTime">
+         <el-table-column label="创建时间" align="center" width="160" prop="createTime">
             <template #default="scope">
                <span>{{ parseTime(scope.row.createTime) }}</span>
             </template>
@@ -113,12 +113,10 @@
                      <el-popover
                         placement="bottom-start"
                         :width="540"
-                        v-model:visible="showChooseIcon"
                         trigger="click"
-                        @show="showSelectIcon"
                      >
                         <template #reference>
-                           <el-input v-model="form.icon" placeholder="点击选择图标" @blur="showSelectIcon" v-click-outside="hideSelectIcon" readonly>
+                           <el-input v-model="form.icon" placeholder="点击选择图标" @blur="showSelectIcon" readonly>
                               <template #prefix>
                                  <svg-icon
                                     v-if="form.icon"
@@ -130,7 +128,7 @@
                               </template>
                            </el-input>
                         </template>
-                        <icon-select ref="iconSelectRef" @selected="selected" />
+                        <icon-select ref="iconSelectRef" @selected="selected" :active-icon="form.icon" />
                      </el-popover>
                   </el-form-item>
                </el-col>
@@ -246,7 +244,7 @@
                      </el-radio-group>
                   </el-form-item>
                </el-col>
-               <el-col :span="12" v-if="form.menuType != 'F'">
+               <el-col :span="12">
                   <el-form-item>
                      <template #label>
                         <span>
@@ -281,7 +279,6 @@
 import { addMenu, delMenu, getMenu, listMenu, updateMenu } from "@/api/system/menu";
 import SvgIcon from "@/components/SvgIcon";
 import IconSelect from "@/components/IconSelect";
-import { ClickOutside as vClickOutside } from 'element-plus'
 
 const { proxy } = getCurrentInstance();
 const { sys_show_hide, sys_normal_disable } = proxy.useDict("sys_show_hide", "sys_normal_disable");
@@ -294,7 +291,6 @@ const title = ref("");
 const menuOptions = ref([]);
 const isExpandAll = ref(false);
 const refreshTable = ref(true);
-const showChooseIcon = ref(false);
 const iconSelectRef = ref(null);
 
 const data = reactive({
@@ -353,20 +349,10 @@ function reset() {
 /** 展示下拉图标 */
 function showSelectIcon() {
   iconSelectRef.value.reset();
-  showChooseIcon.value = true;
 }
 /** 选择图标 */
 function selected(name) {
   form.value.icon = name;
-  showChooseIcon.value = false;
-}
-/** 图标外层点击隐藏下拉列表 */
-function hideSelectIcon(event) {
-  var elem = event.relatedTarget || event.srcElement || event.target || event.currentTarget;
-  var className = elem.className;
-  if (className !== "el-input__inner") {
-    showChooseIcon.value = false;
-  }
 }
 /** 搜索按钮操作 */
 function handleQuery() {

@@ -11,7 +11,7 @@ import usePermissionStore from '@/store/modules/permission'
 
 NProgress.configure({ showSpinner: false });
 
-const whiteList = ['/login', '/auth-redirect', '/bind', '/register'];
+const whiteList = ['/login', '/register'];
 
 router.beforeEach((to, from, next) => {
   NProgress.start()
@@ -21,6 +21,8 @@ router.beforeEach((to, from, next) => {
     if (to.path === '/login') {
       next({ path: '/' })
       NProgress.done()
+    } else if (whiteList.indexOf(to.path) !== -1) {
+      next()
     } else {
       if (useUserStore().roles.length === 0) {
         isRelogin.show = true

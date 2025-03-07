@@ -13,7 +13,14 @@ CREATE TABLE Course
     creator_id    INT                                                     NOT NULL COMMENT '课程创建者ID（教师或管理员）',
     creation_time DATETIME                                                NOT NULL COMMENT '课程创建时间',
     subject       VARCHAR(50)                                             NOT NULL COMMENT '课程所属学科（如“计算机科学”）',
-    course_type   VARCHAR(50)                                             NOT NULL COMMENT '课程类型（如“公开课”“必修课”）'
-    #     FOREIGN KEY (reviewer_id) REFERENCES User (user_id),
-    #     FOREIGN KEY (creator_id) REFERENCES User (user_id)
+    course_type   VARCHAR(50)                                             NOT NULL COMMENT '课程类型（如“公开课”“必修课”）',
+    FOREIGN KEY (creator_id) REFERENCES User (user_id) COMMENT '外键：关联用户表的user_id',
+    FOREIGN KEY (reviewer_id) REFERENCES User (user_id) COMMENT '外键：关联用户表的user_id'
 ) COMMENT '课程管理';
+
+-- 插入示例数据
+INSERT INTO Course (name, description, objectives, content, syllabus, status, reviewer_id, creator_id, creation_time, subject, course_type)
+VALUES
+('Python编程入门', 'Python基础课程', '掌握Python基础语法', '详细教学内容...', '课程大纲...', 'Published', 1, 2, '2023-10-01 12:00:00', '计算机科学', '必修课'),
+('Java编程', 'Java基础课程', '掌握Java基础语法', '详细教学内容...', '课程大纲...', 'Published', 1, 2, '2023-10-01 12:00:00', '计算机科学', '必修课'),
+('数据结构与算法', '数据结构与算法基础', '掌握常见数据结构与算法', '详细教学内容...', '课程大纲...', 'Published', 1, 2, '2023-10-02 12:00:00', '计算机科学', '必修课');

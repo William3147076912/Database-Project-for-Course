@@ -1,5 +1,5 @@
 <template>
-    <el-form size="small">
+    <el-form>
         <el-form-item>
             <el-radio v-model='radioValue' :label="1">
                 秒，允许的通配符[, - * /]
@@ -119,7 +119,7 @@ function onRadioChange() {
 </script>
 
 <style lang="scss" scoped>
-.el-input-number--small, .el-input-number--small, .el-select, .el-select--small {
+.el-input-number--small, .el-select, .el-select--small {
     margin: 0 0.2rem;
 }
 .el-select, .el-select--small {
