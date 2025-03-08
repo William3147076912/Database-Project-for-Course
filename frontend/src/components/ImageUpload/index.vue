@@ -93,7 +93,8 @@ watch(() => props.modelValue, val => {
     // 然后将数组转为对象数组
     fileList.value = list.map(item => {
       if (typeof item === "string") {
-        if (item.indexOf(baseUrl) === -1) {
+        if (item.indexOf(baseUrl) === -1 &&  item.indexOf("http") === -1) {
+          // 如果不包含baseurl且http，拼接上baseurl
           item = { name: baseUrl + item, url: baseUrl + item };
         } else {
           item = { name: item, url: item };

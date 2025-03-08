@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-const url = ref('https://gitee.com/y_project/RuoYi-Vue');
+const url = ref('https://github.com/William3147076912/Database-Project-for-Course');
 
 function goto() {
   window.open(url.value)

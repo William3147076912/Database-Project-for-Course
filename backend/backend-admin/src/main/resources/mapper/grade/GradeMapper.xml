@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qwq.grade.mapper.GradeMapper">
+    
+    <resultMap type="Grade" id="GradeResult">
+        <result property="submissionId"    column="submission_id"    />
+        <result property="score"    column="score"    />
+        <result property="graderId"    column="grader_id"    />
+        <result property="gradingTime"    column="grading_time"    />
+        <result property="comments"    column="comments"    />
+    </resultMap>
+
+    <sql id="selectGradeVo">
+        select submission_id, score, grader_id, grading_time, comments from grade
+    </sql>
+
+    <select id="selectGradeList" parameterType="Grade" resultMap="GradeResult">
+        <include refid="selectGradeVo"/>
+        <where>  
+            <if test="score != null "> and score = #{score}</if>
+            <if test="graderId != null "> and grader_id = #{graderId}</if>
+            <if test="gradingTime != null "> and grading_time = #{gradingTime}</if>
+            <if test="comments != null  and comments != ''"> and comments = #{comments}</if>
+        </where>
+    </select>
+    
+    <select id="selectGradeBySubmissionId" parameterType="Long" resultMap="GradeResult">
+        <include refid="selectGradeVo"/>
+        where submission_id = #{submissionId}
+    </select>
+
+    <insert id="insertGrade" parameterType="Grade">
+        insert into grade
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="submissionId != null">submission_id,</if>
+            <if test="score != null">score,</if>
+            <if test="graderId != null">grader_id,</if>
+            <if test="gradingTime != null">grading_time,</if>
+            <if test="comments != null">comments,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="submissionId != null">#{submissionId},</if>
+            <if test="score != null">#{score},</if>
+            <if test="graderId != null">#{graderId},</if>
+            <if test="gradingTime != null">#{gradingTime},</if>
+            <if test="comments != null">#{comments},</if>
+         </trim>
+    </insert>
+
+    <update id="updateGrade" parameterType="Grade">
+        update grade
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="score != null">score = #{score},</if>
+            <if test="graderId != null">grader_id = #{graderId},</if>
+            <if test="gradingTime != null">grading_time = #{gradingTime},</if>
+            <if test="comments != null">comments = #{comments},</if>
+        </trim>
+        where submission_id = #{submissionId}
+    </update>
+
+    <delete id="deleteGradeBySubmissionId" parameterType="Long">
+        delete from grade where submission_id = #{submissionId}
+    </delete>
+
+    <delete id="deleteGradeBySubmissionIds" parameterType="String">
+        delete from grade where submission_id in 
+        <foreach item="submissionId" collection="array" open="(" separator="," close=")">
+            #{submissionId}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,22 +1,6 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="课程编码" prop="code">
-        <el-input
-          v-model="queryParams.code"
-          placeholder="请输入课程编码"
-          clearable
-          @keyup.enter="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="课程学科" prop="subject">
-        <el-input
-          v-model="queryParams.subject"
-          placeholder="请输入课程学科"
-          clearable
-          @keyup.enter="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="课程名称" prop="name">
         <el-input
           v-model="queryParams.name"
@@ -25,10 +9,10 @@
           @keyup.enter="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="适用人群" prop="applicablePerson">
+      <el-form-item label="所属学科" prop="subject">
         <el-input
-          v-model="queryParams.applicablePerson"
-          placeholder="请输入适用人群"
+          v-model="queryParams.subject"
+          placeholder="请输入所属学科"
           clearable
           @keyup.enter="handleQuery"
         />
@@ -83,13 +67,14 @@
 
     <el-table v-loading="loading" :data="courseList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="课程id" align="center" prop="id" />
-      <el-table-column label="课程编码" align="center" prop="code" />
-      <el-table-column label="课程学科" align="center" prop="subject" />
+      <el-table-column label="课程id" align="center" prop="courseId" />
       <el-table-column label="课程名称" align="center" prop="name" />
-      <el-table-column label="价格" align="center" prop="price" />
-      <el-table-column label="适用人群" align="center" prop="applicablePerson" />
-      <el-table-column label="课程介绍" align="center" prop="info" />
+      <el-table-column label="课程简介" align="center" prop="description" />
+      <el-table-column label="课程目标" align="center" prop="objectives" />
+      <el-table-column label="课程内容" align="center" prop="content" />
+      <el-table-column label="课程大纲" align="center" prop="syllabus" />
+      <el-table-column label="课程状态" align="center" prop="status" />
+      <el-table-column label="所属学科" align="center" prop="subject" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['course:course:edit']">修改</el-button>
@@ -109,23 +94,23 @@
     <!-- 添加或修改课程管理对话框 -->
     <el-dialog :title="title" v-model="open" width="500px" append-to-body>
       <el-form ref="courseRef" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="课程编码" prop="code">
-          <el-input v-model="form.code" placeholder="请输入课程编码" />
-        </el-form-item>
-        <el-form-item label="课程学科" prop="subject">
-          <el-input v-model="form.subject" placeholder="请输入课程学科" />
-        </el-form-item>
         <el-form-item label="课程名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入课程名称" />
         </el-form-item>
-        <el-form-item label="价格" prop="price">
-          <el-input v-model="form.price" placeholder="请输入价格" />
+        <el-form-item label="课程简介" prop="description">
+          <el-input v-model="form.description" type="textarea" placeholder="请输入内容" />
         </el-form-item>
-        <el-form-item label="适用人群" prop="applicablePerson">
-          <el-input v-model="form.applicablePerson" placeholder="请输入适用人群" />
+        <el-form-item label="课程目标" prop="objectives">
+          <el-input v-model="form.objectives" type="textarea" placeholder="请输入内容" />
         </el-form-item>
-        <el-form-item label="课程介绍" prop="info">
-          <el-input v-model="form.info" placeholder="请输入课程介绍" />
+        <el-form-item label="课程内容">
+          <editor v-model="form.content" :min-height="192"/>
+        </el-form-item>
+        <el-form-item label="课程大纲" prop="syllabus">
+          <el-input v-model="form.syllabus" type="textarea" placeholder="请输入内容" />
+        </el-form-item>
+        <el-form-item label="所属学科" prop="subject">
+          <el-input v-model="form.subject" placeholder="请输入所属学科" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -158,29 +143,22 @@ const data = reactive({
   queryParams: {
     pageNum: 1,
     pageSize: 10,
-    code: null,
-    subject: null,
     name: null,
-    applicablePerson: null,
+    status: null,
+    subject: null,
   },
   rules: {
-    code: [
-      { required: true, message: "课程编码不能为空", trigger: "blur" }
-    ],
-    subject: [
-      { required: true, message: "课程学科不能为空", trigger: "blur" }
-    ],
     name: [
       { required: true, message: "课程名称不能为空", trigger: "blur" }
     ],
-    price: [
-      { required: true, message: "价格不能为空", trigger: "blur" }
+    description: [
+      { required: true, message: "课程简介不能为空", trigger: "blur" }
     ],
-    applicablePerson: [
-      { required: true, message: "适用人群不能为空", trigger: "blur" }
+    status: [
+      { required: true, message: "课程状态不能为空", trigger: "change" }
     ],
-    info: [
-      { required: true, message: "课程介绍不能为空", trigger: "blur" }
+    subject: [
+      { required: true, message: "所属学科不能为空", trigger: "blur" }
     ],
   }
 });
@@ -206,15 +184,18 @@ function cancel() {
 // 表单重置
 function reset() {
   form.value = {
-    id: null,
-    code: null,
-    subject: null,
+    courseId: null,
     name: null,
-    price: null,
-    applicablePerson: null,
-    info: null,
-    createTime: null,
-    updateTime: null
+    description: null,
+    objectives: null,
+    content: null,
+    syllabus: null,
+    status: null,
+    reviewerId: null,
+    creatorId: null,
+    creationTime: null,
+    subject: null,
+    courseType: null
   };
   proxy.resetForm("courseRef");
 }
@@ -233,7 +214,7 @@ function resetQuery() {
 
 // 多选框选中数据
 function handleSelectionChange(selection) {
-  ids.value = selection.map(item => item.id);
+  ids.value = selection.map(item => item.courseId);
   single.value = selection.length != 1;
   multiple.value = !selection.length;
 }
@@ -248,8 +229,8 @@ function handleAdd() {
 /** 修改按钮操作 */
 function handleUpdate(row) {
   reset();
-  const _id = row.id || ids.value
-  getCourse(_id).then(response => {
+  const _courseId = row.courseId || ids.value
+  getCourse(_courseId).then(response => {
     form.value = response.data;
     open.value = true;
     title.value = "修改课程管理";
@@ -260,7 +241,7 @@ function handleUpdate(row) {
 function submitForm() {
   proxy.$refs["courseRef"].validate(valid => {
     if (valid) {
-      if (form.value.id != null) {
+      if (form.value.courseId != null) {
         updateCourse(form.value).then(response => {
           proxy.$modal.msgSuccess("修改成功");
           open.value = false;
@@ -279,9 +260,9 @@ function submitForm() {
 
 /** 删除按钮操作 */
 function handleDelete(row) {
-  const _ids = row.id || ids.value;
-  proxy.$modal.confirm('是否确认删除课程管理编号为"' + _ids + '"的数据项？').then(function() {
-    return delCourse(_ids);
+  const _courseIds = row.courseId || ids.value;
+  proxy.$modal.confirm('是否确认删除课程管理编号为"' + _courseIds + '"的数据项？').then(function() {
+    return delCourse(_courseIds);
   }).then(() => {
     getList();
     proxy.$modal.msgSuccess("删除成功");
