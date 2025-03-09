@@ -1,6 +1,6 @@
 # 课程
-DROP TABLE IF EXISTS Course;
-CREATE TABLE Course
+DROP TABLE IF EXISTS course;
+CREATE TABLE course
 (
     course_id     INT PRIMARY KEY AUTO_INCREMENT COMMENT '课程id',
     name          VARCHAR(200)                                            NOT NULL COMMENT '课程标题（如“Python编程入门”）',
@@ -19,7 +19,7 @@ CREATE TABLE Course
 ) COMMENT '课程管理';
 
 -- 插入示例数据
-INSERT INTO Course (name, description, objectives, content, syllabus, status, reviewer_id, creator_id, creation_time,
+INSERT INTO course (name, description, objectives, content, syllabus, status, reviewer_id, creator_id, creation_time,
                     subject, course_type)
 VALUES ('Python编程入门', 'Python基础课程', '掌握Python基础语法', '详细教学内容...', '课程大纲...', 'Published', 1, 2,
         '2023-10-01 12:00:00', '计算机科学', '必修课'),

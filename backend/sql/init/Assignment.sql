@@ -1,6 +1,6 @@
 # 作业/考试
-DROP TABLE IF EXISTS Assignment;
-CREATE TABLE Assignment
+DROP TABLE IF EXISTS assignment;
+CREATE TABLE assignment
 (
     assignment_id   INT PRIMARY KEY AUTO_INCREMENT COMMENT '作业/考试ID',
     course_id       INT                         NOT NULL COMMENT '关联的课程ID',
@@ -16,7 +16,7 @@ CREATE TABLE Assignment
 ) COMMENT '作业/考试';
 
 -- 插入示例数据
-INSERT INTO Assignment (course_id, creator_id, assignment_type, title, description, deadline, full_score, creation_time)
+INSERT INTO assignment (course_id, creator_id, assignment_type, title, description, deadline, full_score, creation_time)
 VALUES (1, 2, 'Assignment', '作业1', '这是第一份作业', '2023-12-31 23:59:59', 100, '2023-11-01 12:00:00'),
        (1, 2, 'Exam', '期中考试', '这是期中考试', '2023-11-15 17:00:00', 100, '2023-11-01 12:00:00'),
        (2, 2, 'Assignment', '作业2', '这是第二份作业', '2023-12-31 23:59:59', 100, '2023-11-02 12:00:00'),

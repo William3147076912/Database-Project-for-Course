@@ -1,6 +1,6 @@
 # 作业提交
-DROP TABLE IF EXISTS Submission;
-CREATE TABLE Submission
+DROP TABLE IF EXISTS submission;
+CREATE TABLE submission
 (
     submission_id        INT PRIMARY KEY AUTO_INCREMENT COMMENT '提交记录ID',
     assessment_id        INT                          NOT NULL COMMENT '关联的作业/考试ID',
@@ -13,7 +13,7 @@ CREATE TABLE Submission
 ) COMMENT '作业提交记录';
 
 -- 插入示例数据
-INSERT INTO Submission (assessment_id, student_id, content_or_file_path, submission_time, status)
+INSERT INTO submission (assessment_id, student_id, content_or_file_path, submission_time, status)
 VALUES (1, 3, '/submissions/assignment1_student001.txt', '2023-11-02 12:00:00', 'Graded'),
        (2, 3, '/submissions/exam1_student001.txt', '2023-11-16 12:00:00', 'Graded'),
        (1, 4, '/submissions/assignment1_student002.txt', '2023-11-02 12:00:00', 'Graded'),

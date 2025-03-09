@@ -1,6 +1,6 @@
 # 教育机构
-DROP TABLE IF EXISTS Institution;
-CREATE TABLE Institution
+DROP TABLE IF EXISTS institution;
+CREATE TABLE institution
 (
     institution_id INT PRIMARY KEY AUTO_INCREMENT COMMENT '教育机构ID',
     name           VARCHAR(100) NOT NULL COMMENT '机构名称（如“XX大学”）',
@@ -9,7 +9,6 @@ CREATE TABLE Institution
 ) COMMENT '教育机构信息表';
 
 -- 插入示例数据
-INSERT INTO Institution (name, address, contact_info)
-VALUES
-('XX大学', 'XX市XX区XX路1号', 'contact@xxuniversity.edu'),
-('YY大学', 'YY市YY区YY路2号', 'contact@yyuniversity.edu');
+INSERT INTO institution (name, address, contact_info)
+VALUES ('XX大学', 'XX市XX区XX路1号', 'contact@xxuniversity.edu'),
+       ('YY大学', 'YY市YY区YY路2号', 'contact@yyuniversity.edu');

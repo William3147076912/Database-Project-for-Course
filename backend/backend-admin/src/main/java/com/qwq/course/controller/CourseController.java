@@ -25,7 +25,7 @@ import com.qwq.common.core.page.TableDataInfo;
  * 课程管理Controller
  * 
  * @author william
- * @date 2025-03-08
+ * @date 2025-03-09
  */
 @RestController
 @RequestMapping("/course/course")

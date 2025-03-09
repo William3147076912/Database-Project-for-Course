@@ -7,7 +7,7 @@ import com.qwq.course.domain.Course;
  * 课程管理Mapper接口
  * 
  * @author william
- * @date 2025-03-08
+ * @date 2025-03-09
  */
 public interface CourseMapper 
 {

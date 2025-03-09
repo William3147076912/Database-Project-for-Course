@@ -27,8 +27,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectCourseVo"/>
         <where>  
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="objectives != null  and objectives != ''"> and objectives = #{objectives}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="syllabus != null  and syllabus != ''"> and syllabus = #{syllabus}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
-            <if test="subject != null  and subject != ''"> and subject like concat('%', #{subject}, '%')</if>
+            <if test="reviewerId != null "> and reviewer_id = #{reviewerId}</if>
+            <if test="creatorId != null "> and creator_id = #{creatorId}</if>
+            <if test="creationTime != null "> and creation_time = #{creationTime}</if>
+            <if test="subject != null  and subject != ''"> and subject = #{subject}</if>
+            <if test="courseType != null  and courseType != ''"> and course_type = #{courseType}</if>
         </where>
     </select>
     
@@ -50,7 +58,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="creatorId != null">creator_id,</if>
             <if test="creationTime != null">creation_time,</if>
             <if test="subject != null and subject != ''">subject,</if>
-            <if test="courseType != null">course_type,</if>
+            <if test="courseType != null and courseType != ''">course_type,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="name != null and name != ''">#{name},</if>
@@ -63,7 +71,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="creatorId != null">#{creatorId},</if>
             <if test="creationTime != null">#{creationTime},</if>
             <if test="subject != null and subject != ''">#{subject},</if>
-            <if test="courseType != null">#{courseType},</if>
+            <if test="courseType != null and courseType != ''">#{courseType},</if>
          </trim>
     </insert>
 
@@ -80,7 +88,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="creatorId != null">creator_id = #{creatorId},</if>
             <if test="creationTime != null">creation_time = #{creationTime},</if>
             <if test="subject != null and subject != ''">subject = #{subject},</if>
-            <if test="courseType != null">course_type = #{courseType},</if>
+            <if test="courseType != null and courseType != ''">course_type = #{courseType},</if>
         </trim>
         where course_id = #{courseId}
     </update>

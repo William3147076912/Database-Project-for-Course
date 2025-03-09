@@ -1,6 +1,6 @@
 # 成绩
-DROP TABLE IF EXISTS Grade;
-CREATE TABLE Grade
+DROP TABLE IF EXISTS grade;
+CREATE TABLE grade
 (
     submission_id INT PRIMARY KEY COMMENT '关联的作业提交记录ID',
     score         INT      NOT NULL COMMENT '学生得分（0~满分分值之间）',
@@ -12,7 +12,7 @@ CREATE TABLE Grade
 ) COMMENT '成绩';
 
 -- 插入示例数据
-INSERT INTO Grade (submission_id, score, grader_id, grading_time, comments)
+INSERT INTO grade (submission_id, score, grader_id, grading_time, comments)
 VALUES (1, 85, 2, '2023-12-31 23:59:59', 'Good job!'),
        (2, 90, 2, '2023-11-15 17:00:00', 'Excellent!'),
        (3, 78, 2, '2023-12-31 23:59:59', 'Needs improvement.'),

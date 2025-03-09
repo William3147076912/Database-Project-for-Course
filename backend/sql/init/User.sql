@@ -1,6 +1,6 @@
 # 用户
-DROP TABLE IF EXISTS User;
-CREATE TABLE User
+DROP TABLE IF EXISTS user;
+CREATE TABLE user
 (
     user_id           INT PRIMARY KEY AUTO_INCREMENT COMMENT '用户ID',
     username          VARCHAR(50)                          NOT NULL UNIQUE COMMENT '用户登录名（如 teacher_001）',
@@ -13,7 +13,7 @@ CREATE TABLE User
 ) COMMENT '用户信息表';
 
 -- 插入示例数据
-INSERT INTO User (username, password, email, role, institution_id, registration_time)
+INSERT INTO user (username, password, email, role, institution_id, registration_time)
 VALUES ('admin_001', 'hashed_password_001', 'admin_001@example.com', 'Admin', 1, '2023-09-01 10:00:00'),
        ('teacher_001', 'hashed_password_001', 'teacher_001@example.com', 'Teacher', 1, '2023-09-02 10:00:00'),
        ('student_001', 'hashed_password_001', 'student_001@example.com', 'Student', 1, '2023-09-03 10:00:00'),

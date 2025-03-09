@@ -1,6 +1,6 @@
 # 教学资源
-DROP TABLE IF EXISTS Resource;
-CREATE TABLE Resource
+DROP TABLE IF EXISTS resource;
+CREATE TABLE resource
 (
     resource_id   INT PRIMARY KEY AUTO_INCREMENT COMMENT '资源ID',
     course_id     INT                                                 NOT NULL COMMENT '资源所属课程ID',
@@ -14,8 +14,7 @@ CREATE TABLE Resource
 ) COMMENT '教学资源';
 
 -- 插入示例数据
-INSERT INTO Resource (course_id, uploader_id, resource_name, file_path, resource_type, upload_time)
-VALUES
-(1, 2, '第1章课件.pdf', '/resources/course1/chapter1.pdf', 'Presentation', '2023-10-01 12:00:00'),
-(1, 2, '第1章视频.mp4', '/resources/course1/chapter1_video.mp4', 'Video', '2023-10-01 12:00:00'),
-(2, 2, '第1章课件.pdf', '/resources/course2/chapter1.pdf', 'Presentation', '2023-10-02 12:00:00');
+INSERT INTO resource (course_id, uploader_id, resource_name, file_path, resource_type, upload_time)
+VALUES (1, 2, '第1章课件.pdf', '/resources/course1/chapter1.pdf', 'Presentation', '2023-10-01 12:00:00'),
+       (1, 2, '第1章视频.mp4', '/resources/course1/chapter1_video.mp4', 'Video', '2023-10-01 12:00:00'),
+       (2, 2, '第1章课件.pdf', '/resources/course2/chapter1.pdf', 'Presentation', '2023-10-02 12:00:00');
