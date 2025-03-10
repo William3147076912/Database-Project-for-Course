@@ -243,6 +243,8 @@
 <script setup name="Course">
 import {listCourse, getCourse, delCourse, addCourse, updateCourse} from "@/api/course/course";
 import {getUser, getUserProfile} from "@/api/system/user.js";
+import {addEnrollment, delEnrollment, delEnrollmentByCourseId, listEnrollment} from "@/api/enrollment/enrollment.js";
+import {onBeforeRouteUpdate} from "vue-router";
 
 const {proxy} = getCurrentInstance();
 const {course_status} = proxy.useDict('course_status');
@@ -301,11 +303,18 @@ const data = reactive({
 });
 
 const {queryParams, form, rules} = toRefs(data);
+// 已选课的列表
+const selectedCourseList = ref([]);
 
 /** 查询课程管理列表 */
-function getList() {
+async function getList() {
   loading.value = true;
-  listCourse(queryParams.value).then(response => {
+  // 取得当前用户已经选了的课有哪些
+  await listEnrollment(proxy.studentId).then(response => {
+    selectedCourseList.value = response.rows.map(item => item.courseId);
+    // console.log(JSON.stringify(selectedCourseList.value));
+  });
+  await listCourse(queryParams.value).then(response => {
     courseList.value = response.rows;
     total.value = response.total;
     loading.value = false;
@@ -423,7 +432,7 @@ function handleExport() {
     ...queryParams.value
   }, `course_${new Date().getTime()}.xlsx`)
 }
-const userCourses = ref([]); // 存储用户已选课程的ID列表
+
 const isStudent = ref(false); // 假设从API获取用户角色
 
 
@@ -436,38 +445,44 @@ const checkUserRole = async () => {
 checkUserRole()
 // 检查课程是否已被选择
 const isCourseSelected = (courseId) => {
-  return userCourses.value.includes(courseId);
+  return selectedCourseList.value.includes(courseId);
 };
 
 // 选课
-const selectCourse =  (course) => {
+const selectCourse = (course) => {
   if (isCourseSelected(course.courseId)) {
     proxy.$modal.msgError("您已选过该课程");
     return;
   }
   proxy.$modal.confirm('是否确认要选"' + course.name + '？').then(function () {
-    return delCourse(_courseIds);
+    // return addEnrollment(course.courseId);
+    const jsonParam = {
+      studentId: proxy.studentId,
+      courseId: course.courseId,
+      status: "InProgress",
+    }
+    return addEnrollment(jsonParam)
   }).then(() => {
     getList();
     proxy.$modal.msgSuccess("选课成功");
-    userCourses.value.push(course.courseId);
-  })
+  }).catch(() => {
+  });
 };
 
 // 退选
-const unselectCourse =  (course) => {
+const unselectCourse = (course) => {
   if (!isCourseSelected(course.courseId)) {
     proxy.$modal.msgError("您未选过该课程");
     return;
   }
   proxy.$modal.confirm('是否确认退选"' + course.name + '？').then(function () {
-    return delCourse(_courseIds);
+    return delEnrollmentByCourseId(course.courseId);
   }).then(() => {
     getList();
     proxy.$modal.msgSuccess("退选成功");
-    userCourses.value = userCourses.value.filter(id => id !== course.courseId);
-  })
+  }).catch(() => {
+  });
 };
-
-getList();
+getList()
+// onBeforeRouteUpdate(to=>getList())
 </script>

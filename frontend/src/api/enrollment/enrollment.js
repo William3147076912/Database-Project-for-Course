@@ -42,3 +42,10 @@ export function delEnrollment(enrollmentId) {
     method: 'delete'
   })
 }
+// 根据courseId删除选课记录
+export function delEnrollmentByCourseId(courseId) {
+  return request({
+    url: '/enrollment/enrollment/course/' + courseId,
+    method: 'delete'
+  })
+}

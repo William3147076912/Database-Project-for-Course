@@ -1,19 +1,19 @@
 package com.qwq.enrollment.mapper;
 
 import java.util.List;
+
 import com.qwq.enrollment.domain.CourseEnrollment;
 
 /**
  * 选课记录Mapper接口
- * 
+ *
  * @author william
  * @date 2025-03-09
  */
-public interface CourseEnrollmentMapper 
-{
+public interface CourseEnrollmentMapper {
     /**
      * 查询选课记录
-     * 
+     *
      * @param enrollmentId 选课记录主键
      * @return 选课记录
      */
@@ -21,7 +21,7 @@ public interface CourseEnrollmentMapper
 
     /**
      * 查询选课记录列表
-     * 
+     *
      * @param courseEnrollment 选课记录
      * @return 选课记录集合
      */
@@ -29,7 +29,7 @@ public interface CourseEnrollmentMapper
 
     /**
      * 新增选课记录
-     * 
+     *
      * @param courseEnrollment 选课记录
      * @return 结果
      */
@@ -37,7 +37,7 @@ public interface CourseEnrollmentMapper
 
     /**
      * 修改选课记录
-     * 
+     *
      * @param courseEnrollment 选课记录
      * @return 结果
      */
@@ -45,7 +45,7 @@ public interface CourseEnrollmentMapper
 
     /**
      * 删除选课记录
-     * 
+     *
      * @param enrollmentId 选课记录主键
      * @return 结果
      */
@@ -53,9 +53,11 @@ public interface CourseEnrollmentMapper
 
     /**
      * 批量删除选课记录
-     * 
+     *
      * @param enrollmentIds 需要删除的数据主键集合
      * @return 结果
      */
     public int deleteCourseEnrollmentByEnrollmentIds(Long[] enrollmentIds);
+
+    int deleteCourseEnrollmentByCourseId(Long courseId);
 }
