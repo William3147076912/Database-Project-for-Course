@@ -25,6 +25,7 @@ router.beforeEach((to, from, next) => {
       next()
     } else {
       if (useUserStore().roles.length === 0) {
+        useUserStore().$id
         isRelogin.show = true
         // 判断当前用户是否已拉取完user_info信息
         useUserStore().getInfo().then(() => {

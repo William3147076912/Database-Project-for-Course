@@ -56,9 +56,6 @@ app.config.globalProperties.handleTree = handleTree
 app.config.globalProperties.addDateRange = addDateRange
 app.config.globalProperties.selectDictLabel = selectDictLabel
 app.config.globalProperties.selectDictLabels = selectDictLabels
-app.config.globalProperties.studentId = await getUserProfile().then(response => {
-    return response.data.userId
-})
 // 全局组件挂载
 app.component('DictTag', DictTag)
 app.component('Pagination', Pagination)

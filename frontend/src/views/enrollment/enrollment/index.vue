@@ -161,6 +161,7 @@ import {
 } from "@/api/enrollment/enrollment";
 import {getUserProfile} from "@/api/system/user.js";
 import {onBeforeRouteUpdate} from "vue-router";
+import useUserStore from "@/store/modules/user.js";
 
 const {proxy} = getCurrentInstance();
 const {enrollment_status} = proxy.useDict('enrollment_status');
@@ -210,7 +211,7 @@ const {queryParams, form, rules} = toRefs(data);
 async function getList() {
   loading.value = true;
   // 取得当前用户的studentId
-  queryParams.value.studentId =proxy.studentId;
+  queryParams.value.studentId =useUserStore().id;
   // 根据当前用户的studentId查询选课记录
   await listEnrollment(queryParams.value).then(response => {
     enrollmentList.value = response.rows;

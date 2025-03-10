@@ -245,6 +245,7 @@ import {listCourse, getCourse, delCourse, addCourse, updateCourse} from "@/api/c
 import {getUser, getUserProfile} from "@/api/system/user.js";
 import {addEnrollment, delEnrollment, delEnrollmentByCourseId, listEnrollment} from "@/api/enrollment/enrollment.js";
 import {onBeforeRouteUpdate} from "vue-router";
+import useUserStore from "@/store/modules/user.js";
 
 const {proxy} = getCurrentInstance();
 const {course_status} = proxy.useDict('course_status');
@@ -457,7 +458,7 @@ const selectCourse = (course) => {
   proxy.$modal.confirm('是否确认要选"' + course.name + '？').then(function () {
     // return addEnrollment(course.courseId);
     const jsonParam = {
-      studentId: proxy.studentId,
+      studentId: useUserStore().id,
       courseId: course.courseId,
       status: "InProgress",
     }

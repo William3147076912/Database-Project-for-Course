@@ -30,7 +30,7 @@ const useUserStore = defineStore(
           })
         })
       },
-      // 获取用户信息
+      // 获取用户信息s
       getInfo() {
         return new Promise((resolve, reject) => {
           getInfo().then(res => {
