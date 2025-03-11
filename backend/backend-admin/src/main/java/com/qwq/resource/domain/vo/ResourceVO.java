@@ -1,5 +1,6 @@
 package com.qwq.resource.domain.vo;
 
+import com.qwq.common.annotation.Excel;
 import com.qwq.resource.domain.Resource;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -14,6 +15,10 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class ResourceVO extends Resource {
+    // 课程名称
+    @Excel(name = "所属课程名称", sort = 2)
     private String name;
-    private String createBy;
+    // 创建人
+    @Excel(name = "创建人")
+    private String createdBy;
 }

@@ -310,11 +310,12 @@ const selectedCourseList = ref([]);
 /** 查询课程管理列表 */
 async function getList() {
   loading.value = true;
-  // 取得当前用户已经选了的课有哪些
-  await listEnrollment(proxy.studentId).then(response => {
-    selectedCourseList.value = response.rows.map(item => item.courseId);
-    // console.log(JSON.stringify(selectedCourseList.value));
-  });
+  // 如果当前用户是学生则取得当前用户已经选了的课有哪些
+  if (useUserStore().roles[0] === 'student')
+    await listEnrollment(useUserStore().id).then(response => {
+      selectedCourseList.value = response.rows.map(item => item.courseId);
+      // console.log(JSON.stringify(selectedCourseList.value));
+    });
   await listCourse(queryParams.value).then(response => {
     courseList.value = response.rows;
     total.value = response.total;
