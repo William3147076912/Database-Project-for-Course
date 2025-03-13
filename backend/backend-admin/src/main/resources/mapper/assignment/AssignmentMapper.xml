@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qwq.assignment.mapper.AssignmentMapper">
+    <resultMap type="Assignment" id="AssignmentResult">
+        <result property="assignmentId" column="assignment_id"/>
+        <result property="courseId" column="course_id"/>
+        <result property="creatorId" column="creator_id"/>
+        <result property="assignmentType" column="assignment_type"/>
+        <result property="title" column="title"/>
+        <result property="description" column="description"/>
+        <result property="deadline" column="deadline"/>
+        <result property="fullScore" column="full_score"/>
+        <result property="creationTime" column="creation_time"/>
+    </resultMap>
+
+    <sql id="selectAssignmentVo">
+        SELECT assignment_id, course_id, creator_id, assignment_type, title, description, deadline, full_score,
+               creation_time
+        FROM assignment
+    </sql>
+
+    <select id="selectAssignmentList" parameterType="Assignment" resultMap="AssignmentResult">
+        <include refid="selectAssignmentVo"/>
+        <where>
+            <if test="courseId != null ">
+                and course_id like concat('%', #{courseId}, '%')
+            </if>
+            <if test="creatorId != null ">
+                and creator_id like concat('%', #{creatorId}, '%')
+            </if>
+            <if test="assignmentType != null  and assignmentType != ''">
+                and assignment_type = #{assignmentType}
+            </if>
+            <if test="title != null  and title != ''">
+                and title like #{title}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectAssignmentByAssignmentId" parameterType="Long" resultMap="AssignmentResult">
+        <include refid="selectAssignmentVo"/>
+        where assignment_id = #{assignmentId}
+    </select>
+
+    <insert id="insertAssignment" parameterType="Assignment" useGeneratedKeys="true" keyProperty="assignmentId">
+        insert into assignment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="courseId != null">
+                course_id,
+            </if>
+            <if test="creatorId != null">
+                creator_id,
+            </if>
+            <if test="assignmentType != null and assignmentType != ''">
+                assignment_type,
+            </if>
+            <if test="title != null and title != ''">
+                title,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+            <if test="deadline != null">
+                deadline,
+            </if>
+            <if test="fullScore != null">
+                full_score,
+            </if>
+            <if test="creationTime != null">
+                creation_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="courseId != null">
+                #{courseId},
+            </if>
+            <if test="creatorId != null">
+                #{creatorId},
+            </if>
+            <if test="assignmentType != null and assignmentType != ''">
+                #{assignmentType},
+            </if>
+            <if test="title != null and title != ''">
+                #{title},
+            </if>
+            <if test="description != null">
+                #{description},
+            </if>
+            <if test="deadline != null">
+                #{deadline},
+            </if>
+            <if test="fullScore != null">
+                #{fullScore},
+            </if>
+            <if test="creationTime != null">
+                #{creationTime},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateAssignment" parameterType="Assignment">
+        update assignment
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="courseId != null">
+                course_id = #{courseId},
+            </if>
+            <if test="creatorId != null">
+                creator_id = #{creatorId},
+            </if>
+            <if test="assignmentType != null and assignmentType != ''">
+                assignment_type = #{assignmentType},
+            </if>
+            <if test="title != null and title != ''">
+                title = #{title},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            <if test="deadline != null">
+                deadline = #{deadline},
+            </if>
+            <if test="fullScore != null">
+                full_score = #{fullScore},
+            </if>
+            <if test="creationTime != null">
+                creation_time = #{creationTime},
+            </if>
+        </trim>
+        where assignment_id = #{assignmentId}
+    </update>
+
+    <delete id="deleteAssignmentByAssignmentId" parameterType="Long">
+        DELETE
+        FROM assignment
+        WHERE assignment_id = #{assignmentId}
+    </delete>
+
+    <delete id="deleteAssignmentByAssignmentIds" parameterType="String">
+        delete from assignment where assignment_id in
+        <foreach item="assignmentId" collection="array" open="(" separator="," close=")">
+            #{assignmentId}
+        </foreach>
+    </delete>
+</mapper>

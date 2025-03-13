@@ -320,6 +320,7 @@ async function getList() {
     courseList.value = response.rows;
     total.value = response.total;
     loading.value = false;
+
   });
 }
 
