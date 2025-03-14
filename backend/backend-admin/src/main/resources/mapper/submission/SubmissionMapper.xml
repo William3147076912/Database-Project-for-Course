@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qwq.submission.mapper.SubmissionMapper">
+    
+    <resultMap type="Submission" id="SubmissionResult">
+        <result property="submissionId"    column="submission_id"    />
+        <result property="assignmentId"    column="assignment_id"    />
+        <result property="studentId"    column="student_id"    />
+        <result property="contentOrFilePath"    column="content_or_file_path"    />
+        <result property="submissionTime"    column="submission_time"    />
+        <result property="status"    column="status"    />
+        <result property="score"    column="score"    />
+        <result property="graderId"    column="grader_id"    />
+        <result property="gradingTime"    column="grading_time"    />
+        <result property="comments"    column="comments"    />
+    </resultMap>
+
+    <sql id="selectSubmissionVo">
+        select submission_id, assignment_id, student_id, content_or_file_path, submission_time, status, score, grader_id, grading_time, comments from submission
+    </sql>
+
+    <select id="selectSubmissionList" parameterType="Submission" resultMap="SubmissionResult">
+        <include refid="selectSubmissionVo"/>
+        <where>  
+            <if test="assignmentId != null "> and assignment_id = #{assignmentId}</if>
+            <if test="studentId != null "> and student_id = #{studentId}</if>
+            <if test="contentOrFilePath != null  and contentOrFilePath != ''"> and content_or_file_path = #{contentOrFilePath}</if>
+            <if test="submissionTime != null "> and submission_time = #{submissionTime}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="score != null "> and score = #{score}</if>
+            <if test="graderId != null "> and grader_id = #{graderId}</if>
+            <if test="gradingTime != null "> and grading_time = #{gradingTime}</if>
+            <if test="comments != null  and comments != ''"> and comments = #{comments}</if>
+        </where>
+    </select>
+    
+    <select id="selectSubmissionBySubmissionId" parameterType="Long" resultMap="SubmissionResult">
+        <include refid="selectSubmissionVo"/>
+        where submission_id = #{submissionId}
+    </select>
+
+    <insert id="insertSubmission" parameterType="Submission" useGeneratedKeys="true" keyProperty="submissionId">
+        insert into submission
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="assignmentId != null">assignment_id,</if>
+            <if test="studentId != null">student_id,</if>
+            <if test="contentOrFilePath != null and contentOrFilePath != ''">content_or_file_path,</if>
+            <if test="submissionTime != null">submission_time,</if>
+            <if test="status != null and status != ''">status,</if>
+            <if test="score != null">score,</if>
+            <if test="graderId != null">grader_id,</if>
+            <if test="gradingTime != null">grading_time,</if>
+            <if test="comments != null">comments,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="assignmentId != null">#{assignmentId},</if>
+            <if test="studentId != null">#{studentId},</if>
+            <if test="contentOrFilePath != null and contentOrFilePath != ''">#{contentOrFilePath},</if>
+            <if test="submissionTime != null">#{submissionTime},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="score != null">#{score},</if>
+            <if test="graderId != null">#{graderId},</if>
+            <if test="gradingTime != null">#{gradingTime},</if>
+            <if test="comments != null">#{comments},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSubmission" parameterType="Submission">
+        update submission
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="assignmentId != null">assignment_id = #{assignmentId},</if>
+            <if test="studentId != null">student_id = #{studentId},</if>
+            <if test="contentOrFilePath != null and contentOrFilePath != ''">content_or_file_path = #{contentOrFilePath},</if>
+            <if test="submissionTime != null">submission_time = #{submissionTime},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="score != null">score = #{score},</if>
+            <if test="graderId != null">grader_id = #{graderId},</if>
+            <if test="gradingTime != null">grading_time = #{gradingTime},</if>
+            <if test="comments != null">comments = #{comments},</if>
+        </trim>
+        where submission_id = #{submissionId}
+    </update>
+
+    <delete id="deleteSubmissionBySubmissionId" parameterType="Long">
+        delete from submission where submission_id = #{submissionId}
+    </delete>
+
+    <delete id="deleteSubmissionBySubmissionIds" parameterType="String">
+        delete from submission where submission_id in 
+        <foreach item="submissionId" collection="array" open="(" separator="," close=")">
+            #{submissionId}
+        </foreach>
+    </delete>
+</mapper>

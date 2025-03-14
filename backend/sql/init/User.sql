@@ -1,3 +1,4 @@
+# TODO 已经废弃，使用框架自带的表即可实现
 # 用户
 DROP TABLE IF EXISTS user;
 CREATE TABLE user

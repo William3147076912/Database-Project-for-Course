@@ -93,12 +93,14 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)"
-                     v-if="useUserStore().roles.includes('teacher')" v-hasPermi="['resource:resource:edit']">修改
+                     v-if="!useUserStore().roles.includes('student')"
+                     v-hasPermi="['resource:resource:edit']">修改
           </el-button>
           <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)"
-                     v-if="useUserStore().roles.includes('teacher')" v-hasPermi="['resource:resource:remove']">删除
+                     v-if="!useUserStore().roles.includes('student')"
+                     v-hasPermi="['resource:resource:remove']">删除
           </el-button>
-          <el-button link type="primary" icon="download" v-if="useUserStore().roles.includes('student')"
+          <el-button link type="primary" icon="download"
                      @click="handleDownload(scope.row)">下载
           </el-button>
         </template>

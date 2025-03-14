@@ -9,7 +9,7 @@ import com.qwq.assignment.domain.vo.AssignmentVO;
  * 作业/考试Service接口
  *
  * @author william
- * @date 2025-03-12
+ * @date 2025-03-13
  */
 public interface IAssignmentService {
     /**
@@ -18,7 +18,7 @@ public interface IAssignmentService {
      * @param assignmentId 作业/考试主键
      * @return 作业/考试
      */
-    public Assignment selectAssignmentByAssignmentId(Long assignmentId);
+    public AssignmentVO selectAssignmentByAssignmentId(Long assignmentId);
 
     /**
      * 查询作业/考试列表

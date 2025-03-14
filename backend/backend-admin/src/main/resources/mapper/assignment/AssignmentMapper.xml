@@ -15,6 +15,19 @@
         <result property="creationTime" column="creation_time"/>
     </resultMap>
 
+    <resultMap id="AssignmentSubmissionResult" type="Assignment" extends="AssignmentResult">
+        <collection property="submissionList" ofType="Submission" column="assignment_id" select="selectSubmissionList"/>
+    </resultMap>
+
+    <resultMap type="Submission" id="SubmissionResult">
+        <result property="submissionId" column="submission_id"/>
+        <result property="assignmentId" column="assignment_id"/>
+        <result property="studentId" column="student_id"/>
+        <result property="contentOrFilePath" column="content_or_file_path"/>
+        <result property="submissionTime" column="submission_time"/>
+        <result property="status" column="status"/>
+    </resultMap>
+
     <sql id="selectAssignmentVo">
         SELECT assignment_id, course_id, creator_id, assignment_type, title, description, deadline, full_score,
                creation_time
@@ -34,14 +47,22 @@
                 and assignment_type = #{assignmentType}
             </if>
             <if test="title != null  and title != ''">
-                and title like #{title}
+                and title = #{title}
             </if>
         </where>
     </select>
 
-    <select id="selectAssignmentByAssignmentId" parameterType="Long" resultMap="AssignmentResult">
-        <include refid="selectAssignmentVo"/>
-        where assignment_id = #{assignmentId}
+    <select id="selectAssignmentByAssignmentId" parameterType="Long" resultMap="AssignmentSubmissionResult">
+        SELECT assignment_id, course_id, creator_id, assignment_type, title, description, deadline, full_score,
+               creation_time
+        FROM assignment
+        WHERE assignment_id = #{assignmentId}
+    </select>
+
+    <select id="selectSubmissionList" resultMap="SubmissionResult">
+        SELECT submission_id, assignment_id, student_id, content_or_file_path, submission_time, status
+        FROM submission
+        WHERE assignment_id = #{assignment_id}
     </select>
 
     <insert id="insertAssignment" parameterType="Assignment" useGeneratedKeys="true" keyProperty="assignmentId">
@@ -143,4 +164,26 @@
             #{assignmentId}
         </foreach>
     </delete>
+
+    <delete id="deleteSubmissionByassignmentIds" parameterType="String">
+        delete from submission where assignment_id in
+        <foreach item="assignmentId" collection="array" open="(" separator="," close=")">
+            #{assignmentId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteSubmissionByassignmentId" parameterType="Long">
+        DELETE
+        FROM submission
+        WHERE assignment_id = #{assignmentId}
+    </delete>
+
+    <insert id="batchSubmission">
+        insert into submission( submission_id, assignment_id, student_id, content_or_file_path, submission_time, status)
+        values
+        <foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.submissionId}, #{item.assignmentId}, #{item.studentId}, #{item.contentOrFilePath},
+            #{item.submissionTime}, #{item.status})
+        </foreach>
+    </insert>
 </mapper>

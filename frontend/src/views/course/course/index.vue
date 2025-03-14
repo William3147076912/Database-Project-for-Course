@@ -220,7 +220,7 @@
     </el-dialog>
 
     <!-- 查看课程管理详情对话框 -->
-    <el-dialog title="课程信息" :modal="form" v-model="infoOpen" width="800px" append-to-body>
+    <el-dialog title="课程信息"  v-model="infoOpen" width="800px" append-to-body>
       <!--使用el-descriptions组件以卡片形式展示信息，更简洁-->
       <el-descriptions :column="1" border>
         <el-descriptions-item label="课程名称">{{ form.name }}</el-descriptions-item>

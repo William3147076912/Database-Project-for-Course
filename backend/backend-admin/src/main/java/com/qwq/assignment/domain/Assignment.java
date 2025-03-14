@@ -1,10 +1,10 @@
 package com.qwq.assignment.domain;
 
+import java.util.List;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import com.qwq.submission.domain.Submission;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -13,64 +13,73 @@ import com.qwq.common.annotation.Excel;
 import com.qwq.common.core.domain.BaseEntity;
 
 /**
- * 作业/考试对象 assignment
+ * 任务对象 assignment
  *
  * @author william
- * @date 2025-03-12
+ * @date 2025-03-13
  */
-@EqualsAndHashCode(callSuper = true)
-@Data
+@Setter
+@Getter
 public class Assignment extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 作业/考试ID
+     * 任务ID
      */
     private Long assignmentId;
 
-
+    /**
+     * 关联的课程
+     */
     private Long courseId;
 
-
+    /**
+     * 创建任务的教师
+     */
     private Long creatorId;
 
     /**
      * 评估类型
      */
-    @Excel(name = "评估类型", sort = 1)
+    @Excel(name = "评估类型")
     private String assignmentType;
 
     /**
-     * 作业/考试标题
+     * 任务标题
      */
-    @Excel(name = "作业/考试标题", sort = 0)
+    @Excel(name = "任务标题")
     private String title;
 
     /**
-     * 作业/考试详细说明
+     * 任务详细说明
      */
-    @Excel(name = "作业/考试详细说明", sort = 4)
+    @Excel(name = "任务详细说明")
     private String description;
 
     /**
      * 作业提交截止时间
      */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "作业提交截止时间", width = 30, dateFormat = "yyyy-MM-dd", sort = 6)
+    @Excel(name = "作业提交截止时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date deadline;
 
     /**
-     * 作业/考试的满分分值
+     * 任务的满分分值
      */
-    @Excel(name = "作业/考试的满分分值", sort = 5)
+    @Excel(name = "任务的满分分值")
     private Long fullScore;
 
     /**
-     * 作业/考试创建时间
+     * 任务创建时间
      */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "作业/考试创建时间", width = 30, dateFormat = "yyyy-MM-dd", sort = 7)
+    @Excel(name = "任务创建时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date creationTime;
+
+    /**
+     * 作业提交记录信息
+     */
+    private List<Submission> submissionList;
 
     @Override
     public String toString() {
@@ -84,6 +93,7 @@ public class Assignment extends BaseEntity {
                 .append("deadline", getDeadline())
                 .append("fullScore", getFullScore())
                 .append("creationTime", getCreationTime())
+                .append("submissionList", getSubmissionList())
                 .toString();
     }
 }

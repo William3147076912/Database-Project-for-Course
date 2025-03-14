@@ -1,3 +1,4 @@
+# TODO 已经废弃，字段已经与submission的合并
 # 成绩
 DROP TABLE IF EXISTS grade;
 CREATE TABLE grade
