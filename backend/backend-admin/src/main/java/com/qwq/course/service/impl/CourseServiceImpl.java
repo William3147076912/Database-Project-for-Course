@@ -1,7 +1,11 @@
 package com.qwq.course.service.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.qwq.course.domain.CourseWithStatistic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.qwq.course.mapper.CourseMapper;
@@ -83,5 +87,27 @@ public class CourseServiceImpl implements ICourseService {
     @Override
     public int deleteCourseByCourseId(Long courseId) {
         return courseMapper.deleteCourseByCourseId(courseId);
+    }
+    /**
+     * 统计所有课程各自的选课人数
+     *
+     * @return 课程ID和选课人数的映射集合
+     */
+    @Override
+    public List<CourseWithStatistic> selectCourseEnrollmentCount(Course course)
+    {
+        List<Course>  list=this.selectCourseList(course);
+        Map<Long, Long> list2 = new HashMap<>();
+        List<Map<String,Object>> results=courseMapper.selectCourseEnrollmentCount();
+        for (Map<String, Object> row : results) {
+            Long courseId = (Long) row.get("courseId");
+            Long enrollmentCount = (Long) row.get("enrollmentCount");
+            list2.put(courseId, enrollmentCount);
+        }
+        List<CourseWithStatistic> list3 = new ArrayList<>();
+        for (Course value : list) {
+            list3.add(new CourseWithStatistic(value, list2.get(value.getCourseId()), 0));
+        }
+        return list3;
     }
 }

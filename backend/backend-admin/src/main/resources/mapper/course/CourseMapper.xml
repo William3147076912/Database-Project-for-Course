@@ -103,4 +103,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{courseId}
         </foreach>
     </delete>
+
+    <select id="selectCourseEnrollmentCount" resultType="map">
+        SELECT c.course_id AS courseId, COUNT(e.student_id) AS enrollmentCount
+        FROM course c
+                 LEFT JOIN course_enrollment e ON c.course_id = e.course_id
+        GROUP BY c.course_id
+    </select>
 </mapper>

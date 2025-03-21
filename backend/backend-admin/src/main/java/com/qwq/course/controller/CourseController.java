@@ -1,7 +1,10 @@
 package com.qwq.course.controller;
 
 import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
+
+import com.qwq.course.domain.CourseWithStatistic;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -100,5 +103,13 @@ public class CourseController extends BaseController
     public AjaxResult remove(@PathVariable Long[] courseIds)
     {
         return toAjax(courseService.deleteCourseByCourseIds(courseIds));
+    }
+
+    @PreAuthorize("@ss.hasPermi('course:course:enrollment')")
+    @GetMapping("/enrollmentCount")
+    public TableDataInfo getCourseEnrollmentCount(Course course)
+    {
+        List<CourseWithStatistic> enrollmentCounts = courseService.selectCourseEnrollmentCount(course);
+        return getDataTable(enrollmentCounts);
     }
 }

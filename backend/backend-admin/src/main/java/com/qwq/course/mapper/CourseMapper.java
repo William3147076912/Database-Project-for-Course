@@ -1,8 +1,10 @@
 package com.qwq.course.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import com.qwq.course.domain.Course;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * 课程管理Mapper接口
@@ -10,6 +12,7 @@ import com.qwq.course.domain.Course;
  * @author william
  * @date 2025-03-09
  */
+@Mapper
 public interface CourseMapper {
     /**
      * 查询课程管理
@@ -54,8 +57,15 @@ public interface CourseMapper {
     /**
      * 批量删除课程管理
      *
-     * @param courseIds 需要删除的数据主键集合
+     * @param courseIds 需要的数据主键集合
      * @return 结果
      */
     public int deleteCourseByCourseIds(Long[] courseIds);
+
+    /**
+     * 统计所有课程各自的选课人数
+     *
+     * @return 课程ID和选课人数的映射集合
+     */
+    public List<Map<String, Object>> selectCourseEnrollmentCount();
 }

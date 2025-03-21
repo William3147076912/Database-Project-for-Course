@@ -9,6 +9,13 @@ export function listCourse(query) {
   })
 }
 
+export function listCourseWithStatistics(query) {
+  return request({
+    url: '/course/course/enrollmentCount',
+    method: 'get',
+    params: query
+  })
+}
 // 查询课程管理详细
 export function getCourse(courseId) {
   return request({

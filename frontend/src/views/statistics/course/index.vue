@@ -45,7 +45,7 @@
         </el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-form-item label="课程总数：" prop="name">99</el-form-item>
+        <el-form-item label="课程总数：" prop="name">{{total}}</el-form-item>
       </el-col>
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
@@ -60,8 +60,8 @@
         </template>
       </el-table-column>
       <el-table-column label="所属学科" align="center" prop="subject"/>
-      <el-table-column label="选课人数" align="center">999</el-table-column>
-      <el-table-column label="完成率" align="center">100%</el-table-column>>
+      <el-table-column label="选课人数" align="center" prop="enrollmentCount"/>
+      <el-table-column label="完成率" align="center" prop="completionRate"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-button link type="primary" icon="Search" @click="handleInfo(scope.row)"
@@ -90,15 +90,15 @@
         <el-descriptions-item label="课程状态">
           <dict-tag :options="course_status" :value="form.status"/>
         </el-descriptions-item>
-        <el-descriptions-item label="选课人数">999</el-descriptions-item>
-        <el-descriptions-item label="课程完成率">100%</el-descriptions-item>
+        <el-descriptions-item label="选课人数">{{ form.enrollmentCount }}</el-descriptions-item>
+        <el-descriptions-item label="课程完成率">{{ form.completionRate }}%</el-descriptions-item>
       </el-descriptions>
     </el-dialog>
   </div>
 </template>
 
 <script setup name="Course">
-import {listCourse, getCourse, delCourse, addCourse, updateCourse} from "@/api/course/course";
+import {listCourse, getCourse, delCourse, addCourse, updateCourse,listCourseWithStatistics} from "@/api/course/course";
 import {getUser, getUserProfile} from "@/api/system/user.js";
 import {addEnrollment, delEnrollment, delEnrollmentByCourseId, listEnrollment} from "@/api/enrollment/enrollment.js";
 import {onBeforeRouteUpdate} from "vue-router";
@@ -133,7 +133,9 @@ const data = reactive({
     creatorId: null,
     creationTime: null,
     subject: null,
-    courseType: null
+    courseType: null,
+    enrollmentCount:null,
+    completionRate:null
   },
   rules: {
     name: [
@@ -167,15 +169,7 @@ const selectedCourseList = ref([]);
 /** 查询课程管理列表 */
 async function getList() {
   loading.value = true;
-  // 如果当前用户是学生则取得当前用户已经选了的课有哪些
-  if (useUserStore().roles[0] === 'student')
-    await listEnrollment(useUserStore().id).then(response => {
-      selectedCourseList.value = response.rows.map(item => item.courseId);
-      // console.log(JSON.stringify(selectedCourseList.value));
-    });
-
-
-  await listCourse(queryParams.value).then(response => {
+  await listCourseWithStatistics(queryParams.value).then(response => {
     courseList.value = response.rows;
     total.value = response.total;
     loading.value = false;
@@ -197,7 +191,9 @@ function reset() {
     creatorId: null,
     creationTime: null,
     subject: null,
-    courseType: null
+    courseType: null,
+    enrollmentCount:null,
+    completionRate:null
   };
   proxy.resetForm("courseRef");
 }
@@ -222,11 +218,6 @@ function handleSelectionChange(selection) {
 }
 
 /** 新增按钮操作 */
-function handleAdd() {
-  reset();
-  open.value = true;
-  title.value = "添加课程管理";
-}
 
 /* 查看详情操作 */
 function handleInfo(row) {
@@ -238,16 +229,7 @@ function handleInfo(row) {
   });
 }
 
-/** 修改按钮操作 */
-function handleUpdate(row) {
-  reset();
-  const _courseId = row.courseId || ids.value
-  getCourse(_courseId).then(response => {
-    form.value = response.data;
-    open.value = true;
-    title.value = "修改课程管理";
-  });
-}
+/** 修改按钮操作 *
 
 /** 提交按钮 */
 function submitForm() {

@@ -1,8 +1,10 @@
 package com.qwq.course.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.qwq.course.domain.Course;
+import com.qwq.course.domain.CourseWithStatistic;
 
 /**
  * 课程管理Service接口
@@ -58,4 +60,12 @@ public interface ICourseService {
      * @return 结果
      */
     public int deleteCourseByCourseId(Long courseId);
+
+
+    /**
+     * 统计所有课程各自的选课人数
+     *
+     * @return 课程ID和选课人数的映射集合
+     */
+    public List<CourseWithStatistic> selectCourseEnrollmentCount(Course course);
 }
