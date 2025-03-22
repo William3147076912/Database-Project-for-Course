@@ -1,9 +1,12 @@
 package com.qwq.user.mapper;
 
+import com.qwq.user.domain.Student;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 @Mapper
 public interface StudentMapper {
-    public Long studentNumber();
-    public Long studentLearningTime();
+    Long studentLearningTime();
+    List<Student> selectStudentList(Student student);
 }

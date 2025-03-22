@@ -3,7 +3,9 @@ package com.qwq.user.controller;
 
 import com.qwq.common.core.controller.BaseController;
 import com.qwq.common.core.page.TableDataInfo;
+import com.qwq.user.domain.Student;
 import com.qwq.user.domain.Teacher;
+import com.qwq.user.service.IStudentService;
 import com.qwq.user.service.ITeacherService;
 import com.qwq.user.service.impl.TeacherServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,8 @@ import java.util.List;
 public class UserController extends BaseController {
     @Autowired
     private ITeacherService teacherService;
+    @Autowired
+    private IStudentService studentService;
     @GetMapping("/teacher")
     public Long teacher(){
 
@@ -30,8 +34,9 @@ public class UserController extends BaseController {
         List<Teacher> teachers = teacherService.listTeacher();
         return getDataTable(teachers);
     }
-    @GetMapping("/student")
-    public String student(){
-        return "success";
+    @GetMapping("/listStudent")
+    public TableDataInfo student(Student student){
+        List<Student> students = studentService.listStudent(student);
+        return getDataTable(students);
     }
 }
