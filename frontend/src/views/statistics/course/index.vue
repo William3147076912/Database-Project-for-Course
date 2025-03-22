@@ -79,7 +79,6 @@
         @pagination="getList"
     />
 
-
     <!-- 查看课程管理详情对话框 -->
     <el-dialog title="课程信息"  v-model="infoOpen" width="800px" append-to-body>
       <!--使用el-descriptions组件以卡片形式展示信息，更简洁-->
@@ -98,11 +97,8 @@
 </template>
 
 <script setup name="Course">
-import {listCourse, getCourse, delCourse, addCourse, updateCourse,listCourseWithStatistics} from "@/api/course/course";
-import {getUser, getUserProfile} from "@/api/system/user.js";
-import {addEnrollment, delEnrollment, delEnrollmentByCourseId, listEnrollment} from "@/api/enrollment/enrollment.js";
-import {onBeforeRouteUpdate} from "vue-router";
-import useUserStore from "@/store/modules/user.js";
+import {listCourseWithStatistics} from "@/api/course/course";
+import {getUserProfile} from "@/api/system/user.js";
 
 const {proxy} = getCurrentInstance();
 const {course_status} = proxy.useDict('course_status');
@@ -163,10 +159,7 @@ const data = reactive({
 });
 
 const {queryParams, form, rules} = toRefs(data);
-// 已选课的列表
-const selectedCourseList = ref([]);
 
-/** 查询课程管理列表 */
 async function getList() {
   loading.value = true;
   await listCourseWithStatistics(queryParams.value).then(response => {
@@ -178,25 +171,25 @@ async function getList() {
 
 
 // 表单重置
-function reset() {
-  form.value = {
-    courseId: null,
-    name: null,
-    description: null,
-    objectives: null,
-    content: null,
-    syllabus: null,
-    status: null,
-    reviewerId: null,
-    creatorId: null,
-    creationTime: null,
-    subject: null,
-    courseType: null,
-    enrollmentCount:null,
-    completionRate:null
-  };
-  proxy.resetForm("courseRef");
-}
+// function reset() {
+//   form.value = {
+//     courseId: null,
+//     name: null,
+//     description: null,
+//     objectives: null,
+//     content: null,
+//     syllabus: null,
+//     status: null,
+//     reviewerId: null,
+//     creatorId: null,
+//     creationTime: null,
+//     subject: null,
+//     courseType: null,
+//     enrollmentCount:null,
+//     completionRate:null
+//   };
+//   proxy.resetForm("courseRef");
+// }
 
 /** 搜索按钮操作 */
 function handleQuery() {
@@ -221,37 +214,9 @@ function handleSelectionChange(selection) {
 
 /* 查看详情操作 */
 function handleInfo(row) {
-  reset();
-  const _courseId = row.courseId || ids.value
-  getCourse(_courseId).then(response => {
-    form.value = response.data;
-    infoOpen.value = true;
-  });
+  form.value=row;
+  infoOpen.value = true;
 }
-
-/** 修改按钮操作 *
-
-/** 提交按钮 */
-function submitForm() {
-  proxy.$refs["courseRef"].validate(valid => {
-    if (valid) {
-      if (form.value.courseId != null) {
-        updateCourse(form.value).then(response => {
-          proxy.$modal.msgSuccess("修改成功");
-          open.value = false;
-          getList();
-        });
-      } else {
-        addCourse(form.value).then(response => {
-          proxy.$modal.msgSuccess("新增成功");
-          open.value = false;
-          getList();
-        });
-      }
-    }
-  });
-}
-
 /** 导出按钮操作 */
 function handleExport() {
   proxy.download('course/course/export', {
@@ -269,12 +234,6 @@ const checkUserRole = async () => {
   isStudent.value = roleResponse.roleGroup === '学生';
 };
 checkUserRole()
-// 检查课程是否已被选择
-const isCourseSelected = (courseId) => {
-  return selectedCourseList.value.includes(courseId);
-};
-
-// 选课
 getList()
 // onBeforeRouteUpdate(to=>getList())
 </script>
