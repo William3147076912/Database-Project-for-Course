@@ -13,18 +13,18 @@ public class TeacherServiceImpl implements ITeacherService {
     @Autowired
     private TeacherMapper teacherMapper;
     @Override
-    public Long courseCount(Long teacherId) {
-        Long courseCount = teacherMapper.courseCount(teacherId);
-        return 0L;
-    }
-    @Override
-    public Long teacherCount() {
-        return teacherMapper.teacherCount();
-    }
-    @Override
-    public List<Teacher> listTeacher() {
+    public List<Teacher> listTeacher(Teacher teacher) {
 
-        List<Teacher> teachers=teacherMapper.listTeacher();
+        List<Teacher> teachers=teacherMapper.listTeacher(teacher);
+        for (Teacher teacher1 : teachers)
+        {
+            teacher1.setTeachingQuality(teachingQuality(teacher1.getUserId()));
+        }
         return teachers;
+    }
+    @Override
+    public String teachingQuality(Long teacherId){
+
+        return "良好";
     }
 }

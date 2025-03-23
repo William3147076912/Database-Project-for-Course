@@ -15,6 +15,16 @@ public class StudentServiceImpl implements IStudentService {
     StudentMapper studentMapper;
     @Override
     public List<Student> listStudent(Student student) {
+        List<Student> students=studentMapper.selectStudentList(student);
+        for (Student student1 : students)
+        {
+            student1.setLearningTime(studentMapper.studentLearningTime());
+        }
         return studentMapper.selectStudentList(student);
+    }
+    @Override
+    public int LearningTime(Long studentId) {
+
+        return 999;
     }
 }

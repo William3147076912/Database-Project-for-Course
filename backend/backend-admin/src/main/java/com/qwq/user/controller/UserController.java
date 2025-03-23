@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Base64;
 import java.util.List;
 
 @RestController
@@ -23,15 +22,9 @@ public class UserController extends BaseController {
     private ITeacherService teacherService;
     @Autowired
     private IStudentService studentService;
-    @GetMapping("/teacher")
-    public Long teacher(){
-
-        Long teacherCount = teacherService.teacherCount();
-        return teacherCount;
-    }
     @GetMapping("/listTeacher")
-    public TableDataInfo listTeacher(){
-        List<Teacher> teachers = teacherService.listTeacher();
+    public TableDataInfo listTeacher(Teacher teacher){
+        List<Teacher> teachers = teacherService.listTeacher(teacher);
         return getDataTable(teachers);
     }
     @GetMapping("/listStudent")
