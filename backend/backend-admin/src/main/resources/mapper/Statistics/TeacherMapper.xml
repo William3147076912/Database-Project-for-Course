@@ -9,9 +9,6 @@
         <result property="userName"    column="user_name"    />
         <result property="courseCount" column="courseCount"/>
     </resultMap>
-    <select id="teacherCount" parameterType="Long">
-        select count(*) from sys_user natural join sys_user_role where role_id=101
-    </select>
     <select id="listTeacher" parameterType="Teacher" resultMap="TeacherResult">
         select user_id,user_name,count(course_id) as courseCount from sys_user natural join sys_user_role left join course on sys_user.user_id=course.creator_id where (role_id=101 or role_id=100)
         <if test="userName != null and userName != ''">

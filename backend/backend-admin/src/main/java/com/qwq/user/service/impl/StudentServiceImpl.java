@@ -18,7 +18,7 @@ public class StudentServiceImpl implements IStudentService {
         List<Student> students=studentMapper.selectStudentList(student);
         for (Student student1 : students)
         {
-            student1.setLearningTime(studentMapper.studentLearningTime());
+            student1.setLearningTime(99L);
         }
         return studentMapper.selectStudentList(student);
     }
