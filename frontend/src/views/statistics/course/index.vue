@@ -98,11 +98,8 @@
 </template>
 
 <script setup name="Course">
-import {listCourse, getCourse, delCourse, addCourse, updateCourse,listCourseWithStatistics} from "@/api/course/course";
-import {getUser, getUserProfile} from "@/api/system/user.js";
-import {addEnrollment, delEnrollment, delEnrollmentByCourseId, listEnrollment} from "@/api/enrollment/enrollment.js";
-import {onBeforeRouteUpdate} from "vue-router";
-import useUserStore from "@/store/modules/user.js";
+import {listCourseWithStatistics} from "@/api/course/course";
+import {getUserProfile} from "@/api/system/user.js";
 
 const {proxy} = getCurrentInstance();
 const {course_status} = proxy.useDict('course_status');
@@ -221,13 +218,8 @@ function handleSelectionChange(selection) {
 
 /* 查看详情操作 */
 function handleInfo(row) {
-  reset();
-  const _courseId = row.courseId || ids.value
-  // getCourse(_courseId).then(response => {
-  //   form.value = response.data;
-  //   infoOpen.value = true;
-  // });
-  form.value = row;
+  reset()
+  form.value=row;
   infoOpen.value = true;
 }
 

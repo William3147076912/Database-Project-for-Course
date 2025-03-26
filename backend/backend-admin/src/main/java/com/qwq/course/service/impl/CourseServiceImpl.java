@@ -97,17 +97,26 @@ public class CourseServiceImpl implements ICourseService {
     public List<CourseWithStatistic> selectCourseEnrollmentCount(Course course)
     {
         List<Course>  list=this.selectCourseList(course);
-        Map<Long, Long> list2 = new HashMap<>();
+        Map<Long, Long> mapList = new HashMap<>();
         List<Map<String,Object>> results=courseMapper.selectCourseEnrollmentCount();
         for (Map<String, Object> row : results) {
             Long courseId = (Long) row.get("courseId");
             Long enrollmentCount = (Long) row.get("enrollmentCount");
-            list2.put(courseId, enrollmentCount);
+            mapList.put(courseId, enrollmentCount);
         }
         List<CourseWithStatistic> list3 = new ArrayList<>();
+        Long id;
         for (Course value : list) {
-            list3.add(new CourseWithStatistic(value, list2.get(value.getCourseId()), 0));
+            id=value.getCourseId();
+            list3.add(new CourseWithStatistic(value, mapList.get(id), courseCompleteRate(id)));
         }
         return list3;
+    }
+    //计算课程完成率
+    @Override
+    public int courseCompleteRate(Long courseId)
+    {
+
+        return 0;
     }
 }
