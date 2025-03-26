@@ -3,6 +3,7 @@ import request from '@/utils/request'
 export function getVideo(videoUrl){
     return request({
         url: videoUrl,
-        method: 'get'
+        method: 'get',
+        responseType: 'blob'
     })
 }

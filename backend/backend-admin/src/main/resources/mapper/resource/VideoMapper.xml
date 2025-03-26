@@ -7,7 +7,7 @@
     <resultMap type="Video" id="VideoResult">
         <result property="VideoId"    column="resource_id"    />
         <result property="videoName"    column="resource_name"    />
-        <result property="filePath"    column="file_path"    />
+        <result property="videoUrl"    column="file_path"    />
     </resultMap>
     <select id="SelectVideoById" parameterType="Integer" resultMap="VideoResult">
         select resource_id,resource_name,file_path from resource where resource_id = #{videoId}

@@ -122,7 +122,7 @@
 
     <el-dialog :modal="false" title="视频播放" v-model="videoDialog" width="40%">
       <p>{{ videoName }}</p>
-      <video :src="`${videoUrl}/${videoId}`" controls="controls" width="100%" @canplay="getVidDur()"
+      <video :src="videoUrl" controls="controls" width="100%" @canplay="getVidDur()"
              id="myvideo"></video>
     </el-dialog>
     <!-- 添加或修改教学资源对话框 -->
@@ -329,6 +329,7 @@ function handleVideoPlay(row) {
   getVideo(videoUrl.value + '/'+row.resourceId).then(response => {
     const videoBlob = new Blob([response], {type: 'video/mp4'}); // 假设视频类型为mp4
     videoUrl.value = URL.createObjectURL(videoBlob);
+    console.log(videoUrl.value)
   }).catch(error => {
     console.error('获取视频失败:', error);
   });
