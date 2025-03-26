@@ -112,18 +112,17 @@
       </el-table-column>
     </el-table>
 
-    <pagination
-        v-show="total>0"
-        :total="total"
-        v-model:page="queryParams.pageNum"
-        v-model:limit="queryParams.pageSize"
-        @pagination="getList"
-    />
+    <!--<pagination-->
+    <!--    v-show="total>0"-->
+    <!--    :total="total"-->
+    <!--    v-model:page="queryParams.pageNum"-->
+    <!--    v-model:limit="queryParams.pageSize"-->
+    <!--    @pagination="getList"-->
+    <!--/>-->
 
-    <el-dialog :modal="false" title="视频播放" v-model="videoDialog" width="40%">
+    <el-dialog  title="视频播放" v-model="videoDialog" width="40%" @close="handleVideoClose">
       <p>{{ videoName }}</p>
-      <video :src="videoUrl" controls="controls" width="100%" @canplay="getVidDur()"
-             id="myvideo"></video>
+      <video :src="videoUrl" controls="controls" width="100%" ></video>
     </el-dialog>
     <!-- 添加或修改教学资源对话框 -->
     <el-dialog :title="title" v-model="open" width="500px" append-to-body>
@@ -176,7 +175,7 @@
     <el-button @click="startTimer">开始</el-button>
     <el-button @click="stopTimer">停止</el-button>
   </div>
-  <component v-if="currentComponent" :is="currentComponent" :resource="currentResource"/>
+  <!--<component v-if="currentComponent" :is="currentComponent" :resource="currentResource"/>-->
 </template>
 
 <script setup name="Resource">
@@ -335,9 +334,14 @@ function handleVideoPlay(row) {
   });
 }
 
-function getVidDur() {
-  let videoTime = document.getElementById("myvideo");
+function handleVideoClose() {
+  videoDialog.value = false
+  videoUrl.value = '/resource/resource/video'
 }
+
+// function getVidDur() {
+//   let videoTime = document.getElementById("myvideo");
+// }
 
 /** 提交按钮 */
 function submitForm() {
