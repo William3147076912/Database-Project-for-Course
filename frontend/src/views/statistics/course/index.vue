@@ -223,10 +223,12 @@ function handleSelectionChange(selection) {
 function handleInfo(row) {
   reset();
   const _courseId = row.courseId || ids.value
-  getCourse(_courseId).then(response => {
-    form.value = response.data;
-    infoOpen.value = true;
-  });
+  // getCourse(_courseId).then(response => {
+  //   form.value = response.data;
+  //   infoOpen.value = true;
+  // });
+  form.value = row;
+  infoOpen.value = true;
 }
 
 /** 修改按钮操作 *
