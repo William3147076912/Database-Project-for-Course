@@ -105,8 +105,9 @@
           </el-button>
           <el-button link type="primary" icon="download" @click="()=>{startTimer();showResource(scope.row);}">在线学习
           </el-button>
-            <el-button link type="primary" icon="Search" v-if="scope.row.resourceType==='Video'" @click="handleVideoPlay(scope.row)">在线播放
-            </el-button>
+          <el-button link type="primary" icon="Search" v-if="scope.row.resourceType==='Video'"
+                     @click="handleVideoPlay(scope.row)">在线播放
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -119,9 +120,10 @@
         @pagination="getList"
     />
 
-    <el-dialog :modal="false" title="视频播放" v-model="videoDialog"  width="40%">
+    <el-dialog :modal="false" title="视频播放" v-model="videoDialog" width="40%">
       <p>{{ videoName }}</p>
-      <video :src="`${videoUrl}/${videoId}`" controls="controls" width="100%" @canplay="getVidDur()" id="myvideo"></video>
+      <video :src="`${videoUrl}/${videoId}`" controls="controls" width="100%" @canplay="getVidDur()"
+             id="myvideo"></video>
     </el-dialog>
     <!-- 添加或修改教学资源对话框 -->
     <el-dialog :title="title" v-model="open" width="500px" append-to-body>
@@ -174,7 +176,7 @@
     <el-button @click="startTimer">开始</el-button>
     <el-button @click="stopTimer">停止</el-button>
   </div>
-  <component v-if="currentComponent" :is="currentComponent" :resource="currentResource" />
+  <component v-if="currentComponent" :is="currentComponent" :resource="currentResource"/>
 </template>
 
 <script setup name="Resource">
@@ -195,7 +197,7 @@ const open = ref(false);
 
 const videoDialog = ref(false);
 const videoName = ref('');
-const videoUrl = ref('http://localhost:8080/resource/resource/video');
+const videoUrl = ref( '/resource/resource/video');
 const videoId = ref('');
 
 const loading = ref(true);
@@ -318,16 +320,24 @@ function handleUpdate(row) {
     title.value = "修改教学资源";
   });
 }
-function handleVideoPlay(row)
-{
-  videoDialog.value=true
-  videoName.value=row.resourceName;
-  videoId.value=row.resourceId;
+
+function handleVideoPlay(row) {
+  videoDialog.value = true
+  videoName.value = row.resourceName;
+  videoId.value = row.resourceId;
+  // 请求视频数据
+  getVideo(videoUrl.value + '/'+row.resourceId).then(response => {
+    const videoBlob = new Blob([response], {type: 'video/mp4'}); // 假设视频类型为mp4
+    videoUrl.value = URL.createObjectURL(videoBlob);
+  }).catch(error => {
+    console.error('获取视频失败:', error);
+  });
 }
-function getVidDur()
-{
+
+function getVidDur() {
   let videoTime = document.getElementById("myvideo");
 }
+
 /** 提交按钮 */
 function submitForm() {
   proxy.$refs["resourceRef"].validate(async valid => {
@@ -379,6 +389,7 @@ function handleExport() {
 getList();
 
 import {ref, computed} from 'vue';
+import {getVideo} from "@/api/resource/video.js";
 
 const isRunning = ref(false);
 const startTime = ref(null);
@@ -410,39 +421,43 @@ const updateTimer = () => {
 </script>
 
 <style scoped>
-.background{
+.background {
   background: linear-gradient(to right, #c2e59c, #64b3f4);
   width: 100%;
   height: calc(100vh - 57px);
 }
-.welcome-row{
+
+.welcome-row {
   width: 100%;
   text-align: center;
   margin-top: 36px;
 }
-.welcome{
+
+.welcome {
   color: white;
   font-size: 64px;
   font-weight: 600;
-  font-family: helveticaneuew01-75bold,sans-serif;
+  font-family: helveticaneuew01-75bold, sans-serif;
 }
 
-.video-box{
+.video-box {
   width: 100%;
   min-width: 456px;
   height: 100%;
   border-radius: 20px;
-  background-color: rgba(255,255,255,1);
-  box-shadow: 0 2px 4px rgba(255,255,255,0.8);
+  background-color: rgba(255, 255, 255, 1);
+  box-shadow: 0 2px 4px rgba(255, 255, 255, 0.8);
   display: flex;
   align-items: center;
   justify-content: center;
   margin-top: 24px;
 }
-.video{
+
+.video {
   width: 92%;
 }
-.video-css{
+
+.video-css {
   width: 100%;
   height: 100%;
 }
