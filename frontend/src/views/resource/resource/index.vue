@@ -175,13 +175,7 @@
         </div>
       </template>
     </el-dialog>
-
-
-    <span>{{ formattedTime }}</span>
-    <el-button @click="startTimer">开始</el-button>
-    <el-button @click="stopTimer">停止</el-button>
   </div>
-  <component v-if="currentComponent" :is="currentComponent" :resource="currentResource"/>
 </template>
 
 <script setup name="Resource">
