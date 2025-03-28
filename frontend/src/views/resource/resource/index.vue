@@ -120,7 +120,15 @@
         @pagination="getList"
     />
 
-    <el-dialog :modal="false" title="视频播放" @close="stopTimer()" v-model="videoDialog" width="40%">
+    <p>{{learnTime.userId}}</p>
+    <p>{{learnTime.resourceId}}</p>
+    <p>{{learnTime.learnTime}}</p>
+    <el-dialog
+        :modal="false"
+        title="视频播放"
+        @close="handleDialogClose()"
+        v-model="videoDialog"
+        width="80%">
       <p>{{ videoName }}</p>
       <video :src="videoUrl"
              controls="controls"
@@ -129,6 +137,8 @@
              @pause="stopTimer()"
              @timeupdate="updateVideoCurrentTime"
              ></video>
+      <p>{{formattedTime}}</p>
+      <p>{{totalSeconds}}</p>
     </el-dialog>
     <!-- 添加或修改教学资源对话框 -->
     <el-dialog :title="title" v-model="open" width="500px" append-to-body>
@@ -180,24 +190,24 @@
 
 <script setup name="Resource">
 import {listCourse} from "@/api/course/course.js";
-
 import {listResource, getResource, delResource, addResource, updateResource} from "@/api/resource/resource";
 import useUserStore from "@/store/modules/user.js";
 import FileUpload from "@/components/FileUpload/index.vue";
 import download from "@/plugins/download.js";
+import {ref, computed} from 'vue';
+import {getVideo} from "@/api/resource/resource.js";
+import {updateLearningTime} from "../../../api/resource/resource.js";
 
 const {proxy} = getCurrentInstance();
 const {resource_type} = proxy.useDict('resource_type');
-
 const resourceList = ref([]);
 const open = ref(false);
-
 const videoDialog = ref(false);
 const videoName = ref('');
 const videoUrl = ref( '/resource/resource/video');
 const videoId = ref('');
+const currentResourceId=ref('');
 const videoCurrentTime = ref(0);
-
 const loading = ref(true);
 const showSearch = ref(true);
 const ids = ref([]);
@@ -205,6 +215,10 @@ const single = ref(true);
 const multiple = ref(true);
 const total = ref(0);
 const title = ref("");
+const isRunning = ref(false);
+const startTime = ref(null);
+const elapsedTime = ref(0);
+const totalSeconds = ref(0);
 
 const data = reactive({
   form: {},
@@ -235,6 +249,12 @@ const data = reactive({
   }
 });
 const {queryParams, form, rules} = toRefs(data);
+const learnTime=reactive({
+  studentId:useUserStore().userId,
+  resourceId:null,
+  learnTime:0,
+  Finished:false
+})
 const courseList = ref([]);
 
 function getCourseList() {
@@ -322,12 +342,12 @@ function handleVideoPlay(row) {
   videoDialog.value = true
   videoName.value = row.resourceName;
   videoId.value = row.resourceId;
+  currentResourceId.value=row.resourceId;
   videoUrl.value = '/resource/resource/video/'+row.resourceId
   // 请求视频数据
   getVideo(videoUrl.value).then(response => {
     const videoBlob = new Blob([response], {type: 'video/mp4'}); // 假设视频类型为mp4
     videoUrl.value = URL.createObjectURL(videoBlob);
-    console.log(videoUrl.value)
   }).catch(error => {
     console.error('获取视频失败:', error);
   });
@@ -353,7 +373,14 @@ function handleDialogClose() {
   console.log('视频播放对话框已关闭');
   // 在这里添加你想要执行的逻辑，比如重置某些状态
   stopTimer(); // 停止计时器
-  videoPlay.value = false; // 重置视频播放状态
+  learnTime.studentId=useUserStore().id;
+  learnTime.learnTime=totalSeconds;
+  learnTime.resourceId=currentResourceId.value;
+  learnTime.Finished=true;
+  videoPlay.value = false;
+  updateLearningTime(learnTime);
+  resetTimer();
+
 }
 
 
@@ -407,17 +434,12 @@ function handleExport() {
 
 getList();
 
-import {ref, computed} from 'vue';
-import {getVideo} from "@/api/resource/video.js";
 
-const isRunning = ref(false);
-const startTime = ref(null);
-const elapsedTime = ref(0);
 
 const formattedTime = computed(() => {
-  const totalSeconds = Math.floor(elapsedTime.value / 1000);
+  totalSeconds.value = Math.floor(elapsedTime.value / 1000);
   const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
+  const seconds = totalSeconds.value % 60;
   return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 });
 
@@ -436,5 +458,10 @@ const updateTimer = () => {
     elapsedTime.value = Date.now() - startTime.value;
     requestAnimationFrame(updateTimer);
   }
+};
+const resetTimer = () => {
+  totalSeconds.value= 0;
+  elapsedTime.value = 0;
+  startTime.value = Date.now();
 };
 </script>

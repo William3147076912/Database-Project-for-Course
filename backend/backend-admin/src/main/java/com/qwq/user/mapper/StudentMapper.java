@@ -9,4 +9,5 @@ import java.util.List;
 public interface StudentMapper {
     Long studentLearningTime();
     List<Student> selectStudentList(Student student);
+    Long learningTime(Long studentId);
 }

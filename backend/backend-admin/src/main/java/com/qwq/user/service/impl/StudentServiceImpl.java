@@ -1,6 +1,7 @@
 package com.qwq.user.service.impl;
 
 import com.qwq.common.annotation.Anonymous;
+import com.qwq.resource.domain.LearnTime;
 import com.qwq.user.domain.Student;
 import com.qwq.user.mapper.StudentMapper;
 import com.qwq.user.service.IStudentService;
@@ -18,13 +19,13 @@ public class StudentServiceImpl implements IStudentService {
         List<Student> students=studentMapper.selectStudentList(student);
         for (Student student1 : students)
         {
-            student1.setLearningTime(99L);
+            Long time=  studentMapper.learningTime(student1.getUserId());
+            student1.setLearningTime(time);
         }
-        return studentMapper.selectStudentList(student);
+        return students;
     }
     @Override
-    public int LearningTime(Long studentId) {
-
-        return 999;
+    public Long LearningTime(Long studentId) {
+        return studentMapper.learningTime(studentId);
     }
 }

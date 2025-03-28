@@ -14,9 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.qwq.common.config.RuoYiConfig;
 import com.qwq.common.constant.Constants;
+import com.qwq.resource.domain.LearnTime;
 import com.qwq.resource.domain.vo.ResourceVO;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -80,6 +80,12 @@ public class ResourceController extends BaseController {
     @GetMapping(value = "/{resourceId}")
     public AjaxResult getInfo(@PathVariable("resourceId") Long resourceId) {
         return success(resourceService.selectResourceByResourceId(resourceId));
+    }
+
+    @PutMapping("/updateLearnTime")
+    public AjaxResult updateLearnTime(@RequestBody LearnTime learnTime)
+    {
+        return toAjax(resourceService.updateLearnTime(learnTime));
     }
     @GetMapping("/video/{videoId}")
     public void videoPreview(HttpServletRequest request, HttpServletResponse response, @PathVariable("videoId") String videoId) throws Exception

@@ -6,6 +6,6 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class Student extends User{
-    Long learningTime=999L;
-    int score=999;
+    Long learningTime;
+    int score;
 }

@@ -5,9 +5,11 @@ import com.qwq.common.config.RuoYiConfig;
 import com.qwq.common.core.domain.entity.SysUser;
 import com.qwq.common.utils.file.FileUtils;
 import com.qwq.course.domain.Course;
+import com.qwq.resource.domain.LearnTime;
 import com.qwq.course.service.ICourseService;
 import com.qwq.resource.domain.Resource;
 import com.qwq.resource.domain.vo.ResourceVO;
+import com.qwq.resource.mapper.LearnTimeMapper;
 import com.qwq.resource.mapper.ResourceMapper;
 import com.qwq.resource.service.IResourceService;
 import com.qwq.system.service.ISysUserService;
@@ -33,7 +35,8 @@ public class ResourceServiceImpl implements IResourceService {
     private ICourseService courseService;
     @Autowired
     private ISysUserService userService;
-
+    @Autowired
+    LearnTimeMapper learnTimeMapper;
     /**
      * 查询教学资源
      *
@@ -123,4 +126,20 @@ public class ResourceServiceImpl implements IResourceService {
     public int deleteResourceByResourceId(Long resourceId) {
         return resourceMapper.deleteResourceByResourceId(resourceId);
     }
+
+    @Override
+    public int updateLearnTime(LearnTime learnTime){
+        LearnTime existingLearnTime = learnTimeMapper.selectLearnTime(learnTime);
+        if (existingLearnTime == null) {
+            // 如果不存在，则插入新的学习记录
+            return learnTimeMapper.insertLearnTime(learnTime);
+        } else {
+            // 如果存在，则更新现有学习记录
+            if(existingLearnTime.isFinished() && !learnTime.isFinished())
+                learnTime.setFinished(true);
+            learnTime.setLearnTime(existingLearnTime.getLearnTime() + learnTime.getLearnTime());
+            return learnTimeMapper.updateLearnTime(learnTime);
+        }
+    }
+
 }
