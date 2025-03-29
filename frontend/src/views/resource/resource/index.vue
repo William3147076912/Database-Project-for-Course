@@ -180,9 +180,6 @@
 
 <script setup name="Resource">
 import {listCourse} from "@/api/course/course.js";
-
-const baseURL = import.meta.env.VITE_APP_BASE_API
-import {UploadFilled} from '@element-plus/icons-vue'
 import {listResource, getResource, delResource, addResource, updateResource} from "@/api/resource/resource";
 import useUserStore from "@/store/modules/user.js";
 import FileUpload from "@/components/FileUpload/index.vue";
@@ -424,46 +421,3 @@ const updateTimer = () => {
   }
 };
 </script>
-
-<style scoped>
-.background {
-  background: linear-gradient(to right, #c2e59c, #64b3f4);
-  width: 100%;
-  height: calc(100vh - 57px);
-}
-
-.welcome-row {
-  width: 100%;
-  text-align: center;
-  margin-top: 36px;
-}
-
-.welcome {
-  color: white;
-  font-size: 64px;
-  font-weight: 600;
-  font-family: helveticaneuew01-75bold, sans-serif;
-}
-
-.video-box {
-  width: 100%;
-  min-width: 456px;
-  height: 100%;
-  border-radius: 20px;
-  background-color: rgba(255, 255, 255, 1);
-  box-shadow: 0 2px 4px rgba(255, 255, 255, 0.8);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 24px;
-}
-
-.video {
-  width: 92%;
-}
-
-.video-css {
-  width: 100%;
-  height: 100%;
-}
-</style>

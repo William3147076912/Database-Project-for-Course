@@ -2,6 +2,7 @@ package com.qwq.submission.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,14 +24,13 @@ import com.qwq.common.core.page.TableDataInfo;
 
 /**
  * 作业提交记录Controller
- * 
+ *
  * @author william
  * @date 2025-03-14
  */
 @RestController
 @RequestMapping("/submission/submission")
-public class SubmissionController extends BaseController
-{
+public class SubmissionController extends BaseController {
     @Autowired
     private ISubmissionService submissionService;
 
@@ -39,8 +39,7 @@ public class SubmissionController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('submission:submission:list')")
     @GetMapping("/list")
-    public TableDataInfo list(Submission submission)
-    {
+    public TableDataInfo list(Submission submission) {
         startPage();
         List<Submission> list = submissionService.selectSubmissionList(submission);
         return getDataTable(list);
@@ -52,8 +51,7 @@ public class SubmissionController extends BaseController
     @PreAuthorize("@ss.hasPermi('submission:submission:export')")
     @Log(title = "作业提交记录", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, Submission submission)
-    {
+    public void export(HttpServletResponse response, Submission submission) {
         List<Submission> list = submissionService.selectSubmissionList(submission);
         ExcelUtil<Submission> util = new ExcelUtil<Submission>(Submission.class);
         util.exportExcel(response, list, "作业提交记录数据");
@@ -64,19 +62,16 @@ public class SubmissionController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('submission:submission:query')")
     @GetMapping(value = "/{submissionId}")
-    public AjaxResult getInfo(@PathVariable("submissionId") Long submissionId)
-    {
+    public AjaxResult getInfo(@PathVariable("submissionId") Long submissionId) {
         return success(submissionService.selectSubmissionBySubmissionId(submissionId));
     }
 
     /**
      * 新增作业提交记录
      */
-    @PreAuthorize("@ss.hasPermi('submission:submission:add')")
     @Log(title = "作业提交记录", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody Submission submission)
-    {
+    public AjaxResult add(@RequestBody Submission submission) {
         return toAjax(submissionService.insertSubmission(submission));
     }
 
@@ -86,8 +81,7 @@ public class SubmissionController extends BaseController
     @PreAuthorize("@ss.hasPermi('submission:submission:edit')")
     @Log(title = "作业提交记录", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody Submission submission)
-    {
+    public AjaxResult edit(@RequestBody Submission submission) {
         return toAjax(submissionService.updateSubmission(submission));
     }
 
@@ -96,9 +90,8 @@ public class SubmissionController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('submission:submission:remove')")
     @Log(title = "作业提交记录", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{submissionIds}")
-    public AjaxResult remove(@PathVariable Long[] submissionIds)
-    {
+    @DeleteMapping("/{submissionIds}")
+    public AjaxResult remove(@PathVariable Long[] submissionIds) {
         return toAjax(submissionService.deleteSubmissionBySubmissionIds(submissionIds));
     }
 }
