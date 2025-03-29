@@ -78,7 +78,7 @@ public class SubmissionController extends BaseController {
     /**
      * 修改作业提交记录
      */
-    @PreAuthorize("@ss.hasPermi('submission:submission:edit')")
+//    @PreAuthorize("@ss.hasPermi('submission:submission:edit')")
     @Log(title = "作业提交记录", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody Submission submission) {

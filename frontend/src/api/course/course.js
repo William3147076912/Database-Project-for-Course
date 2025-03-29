@@ -11,7 +11,7 @@ export function listCourse(query) {
 
 export function listCourseWithStatistics(query) {
   return request({
-    url: '/course/course/enrollmentCount',
+    url: '/course/course/statistics',
     method: 'get',
     params: query
   })

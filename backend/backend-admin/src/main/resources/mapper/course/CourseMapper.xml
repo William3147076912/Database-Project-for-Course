@@ -110,4 +110,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                  LEFT JOIN course_enrollment e ON c.course_id = e.course_id
         GROUP BY c.course_id
     </select>
+    <select id="selectCourseResourceId" resultType="Long">
+        select resource_id from resource where course_id = #{courseId}
+    </select>
+    <select id="selectStudentId" resultType="Long">
+        select course_enrollment.student_id
+        from (course left join course_enrollment on course.course_id =course_enrollment.course_id)
+                 left join sys_user on course_enrollment.student_id = sys_user.user_id
+        where course.course_id = #{courseId}
+    </select>
+    <select id="studentFinishResource" parameterType="map" resultType="Boolean">
+        SELECT if_finished
+        FROM learn_time
+        WHERE student_id = #{studentId}
+          AND resource_id = #{resourceId}
+    </select>
 </mapper>

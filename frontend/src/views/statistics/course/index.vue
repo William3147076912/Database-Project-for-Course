@@ -61,7 +61,13 @@
       </el-table-column>
       <el-table-column label="所属学科" align="center" prop="subject"/>
       <el-table-column label="选课人数" align="center" prop="enrollmentCount"/>
-      <el-table-column label="完成率" align="center" prop="completionRate"/>
+
+
+      <el-table-column label="完成率" align="center" prop="completionCount">
+        <template #default="scope">
+          {{handleCompletionRate(scope.row)}}%
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-button link type="primary" icon="Search" @click="handleInfo(scope.row)"
@@ -91,7 +97,7 @@
           <dict-tag :options="course_status" :value="form.status"/>
         </el-descriptions-item>
         <el-descriptions-item label="选课人数">{{ form.enrollmentCount }}</el-descriptions-item>
-        <el-descriptions-item label="课程完成率">{{ form.completionRate }}%</el-descriptions-item>
+        <el-descriptions-item label="课程完成率">{{ form.completionCount*100 }}%</el-descriptions-item>
       </el-descriptions>
     </el-dialog>
   </div>
@@ -132,7 +138,7 @@ const data = reactive({
     subject: null,
     courseType: null,
     enrollmentCount:null,
-    completionRate:null
+    completionCount:null
   },
   rules: {
     name: [
@@ -190,7 +196,7 @@ function reset() {
     subject: null,
     courseType: null,
     enrollmentCount:null,
-    completionRate:null
+    completionCount:null
   };
   proxy.resetForm("courseRef");
 }
@@ -222,29 +228,15 @@ function handleInfo(row) {
   form.value=row;
   infoOpen.value = true;
 }
+function handleCompletionRate(row){
+  if(row.enrollmentCount===0)
+    return 0;
+  return Math.round(row.completionCount/row.enrollmentCount*100);
+}
 
 /** 修改按钮操作 *
 
 /** 提交按钮 */
-function submitForm() {
-  proxy.$refs["courseRef"].validate(valid => {
-    if (valid) {
-      if (form.value.courseId != null) {
-        updateCourse(form.value).then(response => {
-          proxy.$modal.msgSuccess("修改成功");
-          open.value = false;
-          getList();
-        });
-      } else {
-        addCourse(form.value).then(response => {
-          proxy.$modal.msgSuccess("新增成功");
-          open.value = false;
-          getList();
-        });
-      }
-    }
-  });
-}
 
 /** 导出按钮操作 */
 function handleExport() {

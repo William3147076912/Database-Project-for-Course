@@ -5,7 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.qwq.assignment.mapper.AssignmentMapper;
 import com.qwq.course.domain.CourseWithStatistic;
+import com.qwq.resource.mapper.LearnTimeMapper;
+import com.qwq.resource.mapper.ResourceMapper;
+import com.qwq.user.mapper.StudentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.qwq.course.mapper.CourseMapper;
@@ -22,6 +26,14 @@ import com.qwq.course.service.ICourseService;
 public class CourseServiceImpl implements ICourseService {
     @Autowired
     private CourseMapper courseMapper;
+    @Autowired
+    private ResourceMapper resourceMapper;
+    @Autowired
+    private AssignmentMapper assignmentMapper;
+    @Autowired
+    private LearnTimeMapper learnTimeMapper;
+    @Autowired
+    private StudentMapper studentMapper;
 
     /**
      * 查询课程管理
@@ -108,7 +120,9 @@ public class CourseServiceImpl implements ICourseService {
         Long id;
         for (Course value : list) {
             id=value.getCourseId();
-            list3.add(new CourseWithStatistic(value, mapList.get(id), courseCompleteRate(id)));
+            CourseWithStatistic course1=new CourseWithStatistic(value, mapList.get(id), courseCompleteRate(id));
+            course1.setCompletionCount(courseCompleteRate(course1.getCourseId()));
+            list3.add(course1);
         }
         return list3;
     }
@@ -116,7 +130,31 @@ public class CourseServiceImpl implements ICourseService {
     @Override
     public int courseCompleteRate(Long courseId)
     {
-
-        return 0;
+        List<Long> students=courseMapper.selectStudentId(courseId);
+        List<Long> resources=courseMapper.selectCourseResourceId(courseId);
+        int count=0;
+        boolean flag;
+        for(Long studentId:students)
+        {
+            if(studentId==null) continue;
+            flag=true;
+            for (Long resourceId:resources)
+            {
+                if(!courseMapper.studentFinishResource(studentId,resourceId))
+                {
+                    flag=false;
+                    break;
+                }
+            }
+            if(flag)
+            {
+                count++;
+                System.out.println("学生"+studentId+"完成课程"+courseId);
+            }else
+            {
+                System.out.println("学生"+studentId+"未完成课程"+courseId);
+            }
+        }
+        return count;
     }
 }

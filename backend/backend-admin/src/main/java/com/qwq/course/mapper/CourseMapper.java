@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.qwq.course.domain.Course;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 课程管理Mapper接口
@@ -68,4 +69,8 @@ public interface CourseMapper {
      * @return 课程ID和选课人数的映射集合
      */
     public List<Map<String, Object>> selectCourseEnrollmentCount();
+    List<Long> selectCourseResourceId(Long courseId);
+    List<Long> selectStudentId(Long courseId);
+
+    Boolean studentFinishResource(@Param("studentId")Long studentId, @Param("resourceId")Long resourceId);
 }

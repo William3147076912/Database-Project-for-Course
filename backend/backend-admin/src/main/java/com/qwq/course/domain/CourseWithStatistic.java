@@ -7,8 +7,8 @@ import lombok.EqualsAndHashCode;
 @Data
 public class CourseWithStatistic extends Course{
     public Long enrollmentCount;
-    public int completionRate= 0;
-    public CourseWithStatistic(Course course,Long enrollmentCount,int completionRate){
+    public int completionCount = 0;
+    public CourseWithStatistic(Course course,Long enrollmentCount,int completionCount){
         this.setCourseId(course.getCourseId());
         this.setName(course.getName());
         this.setDescription(course.getDescription());
@@ -19,6 +19,6 @@ public class CourseWithStatistic extends Course{
         this.setReviewerId(course.getReviewerId());
         this.setCreatorId(course.getCreatorId());
         this.setEnrollmentCount(enrollmentCount);
-        this.setCompletionRate(completionRate);
+        this.setCompletionCount(completionCount);
     }
 }

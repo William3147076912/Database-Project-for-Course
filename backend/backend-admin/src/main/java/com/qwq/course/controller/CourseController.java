@@ -106,8 +106,8 @@ public class CourseController extends BaseController
     }
 
     @PreAuthorize("@ss.hasPermi('course:course:enrollment')")
-    @GetMapping("/enrollmentCount")
-    public TableDataInfo getCourseEnrollmentCount(Course course)
+    @GetMapping("/statistics")
+    public TableDataInfo getCourseStatistics(Course course)
     {
         List<CourseWithStatistic> enrollmentCounts = courseService.selectCourseEnrollmentCount(course);
         return getDataTable(enrollmentCounts);
