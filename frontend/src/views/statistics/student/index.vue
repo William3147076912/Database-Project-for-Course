@@ -43,7 +43,15 @@
       <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="教师id" align="center" prop="userId"/>
       <el-table-column label="学生姓名" align="center" prop="userName"/>
-      <el-table-column label="学习时长" align="center" prop="learningTime" show-overflow-tooltip/>
+      <el-table-column
+          label="学习时长"
+          align="center"
+          show-overflow-tooltip
+      >
+        <template #default="scope">  <!-- 推荐使用解构赋值 -->
+          {{ formattedTime(scope.row.learningTime) }}
+        </template>
+      </el-table-column>
       <el-table-column label="成绩" align="center" prop="score"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
@@ -67,7 +75,7 @@
       <!--使用el-descriptions组件以卡片形式展示信息，更简洁-->
       <el-descriptions :column="1" border>
         <el-descriptions-item label="学生姓名">{{ form.userName }}</el-descriptions-item>
-        <el-descriptions-item label="学习时长">{{ form.learningTime }}</el-descriptions-item>
+        <el-descriptions-item label="学习时长">{{ form.learningTime }}秒</el-descriptions-item>
         <el-descriptions-item label="成绩">{{ form.score }}</el-descriptions-item>
       </el-descriptions>
     </el-dialog>
@@ -76,6 +84,7 @@
 
 <script setup name="Course">
 import {listStudent} from "@/api/statistics/student.js";
+import {computed} from "vue";
 
 const {proxy} = getCurrentInstance();
 const {course_status} = proxy.useDict('course_status');
@@ -117,7 +126,12 @@ async function getList() {
     loading.value = false;
   });
 }
-
+function formattedTime(learningTime){
+  const hours = Math.floor(learningTime / 3600);
+  const minutes = Math.floor((learningTime%3600) / 60);
+  const seconds = learningTime % 60;
+  return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+}
 
 /** 搜索按钮操作 */
 function handleQuery() {

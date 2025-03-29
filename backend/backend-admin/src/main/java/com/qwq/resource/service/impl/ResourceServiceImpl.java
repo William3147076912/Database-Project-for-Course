@@ -135,7 +135,7 @@ public class ResourceServiceImpl implements IResourceService {
             return learnTimeMapper.insertLearnTime(learnTime);
         } else {
             // 如果存在，则更新现有学习记录
-            if(existingLearnTime.isFinished() && !learnTime.isFinished())
+            if(existingLearnTime.getFinished() && !learnTime.getFinished())
                 learnTime.setFinished(true);
             learnTime.setLearnTime(existingLearnTime.getLearnTime() + learnTime.getLearnTime());
             return learnTimeMapper.updateLearnTime(learnTime);

@@ -128,7 +128,7 @@
         title="视频播放"
         @close="handleDialogClose()"
         v-model="videoDialog"
-        width="80%">
+        width="40%">
       <p>{{ videoName }}</p>
       <video :src="videoUrl"
              controls="controls"
@@ -136,6 +136,8 @@
              @play="startTimer()"
              @pause="stopTimer()"
              @timeupdate="updateVideoCurrentTime"
+             @loadedmetadata="onVideoLoadedMetadata"
+             @ended="onVideoEnded()"
              ></video>
       <p>{{formattedTime}}</p>
       <p>{{totalSeconds}}</p>
@@ -207,6 +209,7 @@ const videoName = ref('');
 const videoUrl = ref( '/resource/resource/video');
 const videoId = ref('');
 const currentResourceId=ref('');
+const currentVideoDuration = ref(0);
 const videoCurrentTime = ref(0);
 const loading = ref(true);
 const showSearch = ref(true);
@@ -352,35 +355,49 @@ function handleVideoPlay(row) {
     console.error('获取视频失败:', error);
   });
 }
-const videoPlay=ref(false);
-function handleVideoClick() {
-  if(videoPlay===false)
-  {
-    startTimer();
-    videoPlay.value=true;
-  }else
-  {
-    stopTimer();
-    videoPlay.value=false;
-  }
-  console.log('视频被点击了');
-  // 在这里添加你想要执行的逻辑，比如播放视频
+function onVideoLoadedMetadata(event) {
+  const video = event.target;
+  console.log('视频时长:', video.duration);
+  // 输出视频时长到控制台
+  // 你可以在这里将视频时长赋值给某个响应式变量，以便在模板中使用
+  currentVideoDuration.value=video.duration;
 }
+// const videoPlay=ref(false);
+// function handleVideoClick() {
+//   if(videoPlay===false)
+//   {
+//     startTimer();
+//     videoPlay.value=true;
+//   }else
+//   {
+//     stopTimer();
+//     videoPlay.value=false;
+//   }
+//   console.log('视频被点击了');
+//   // 在这里添加你想要执行的逻辑，比如播放视频
+// }
 function updateVideoCurrentTime(event) {
   videoCurrentTime.value = event.target.currentTime;
+
+}
+function onVideoEnded() {
+  // 在这里添加你想要执行的逻辑，比如关闭对话框、显示提示信息等
+  learnTime.Finished=true;
+  alert("完成");
 }
 function handleDialogClose() {
   console.log('视频播放对话框已关闭');
   // 在这里添加你想要执行的逻辑，比如重置某些状态
   stopTimer(); // 停止计时器
-  learnTime.studentId=useUserStore().id;
-  learnTime.learnTime=totalSeconds;
-  learnTime.resourceId=currentResourceId.value;
-  learnTime.Finished=true;
-  videoPlay.value = false;
-  updateLearningTime(learnTime);
-  resetTimer();
-
+  if(totalSeconds!==0)
+  {
+    learnTime.studentId=useUserStore().id;
+    learnTime.learnTime=totalSeconds;
+    learnTime.resourceId=currentResourceId.value;
+    updateLearningTime(learnTime);
+    learnTime.Finished=false;
+    resetTimer();
+  }
 }
 
 
