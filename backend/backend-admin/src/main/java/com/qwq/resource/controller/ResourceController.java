@@ -14,11 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.qwq.common.config.RuoYiConfig;
 import com.qwq.common.constant.Constants;
-import com.qwq.resource.domain.Video;
+import com.qwq.resource.domain.LearnTime;
 import com.qwq.resource.domain.vo.ResourceVO;
-import com.qwq.resource.mapper.VideoMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,13 +39,16 @@ import com.qwq.common.core.page.TableDataInfo;
  * 教学资源Controller
  *
  * @author william
- * @date 2025-03-09
+ *  2025-03-09
  */
 @RestController
 @RequestMapping("/resource/resource")
 public class ResourceController extends BaseController {
-    @Autowired
-    private IResourceService resourceService;
+    private final IResourceService resourceService;
+
+    public ResourceController(IResourceService resourceService) {
+        this.resourceService = resourceService;
+    }
 
     /**
      * 查询教学资源列表
@@ -80,22 +81,19 @@ public class ResourceController extends BaseController {
     public AjaxResult getInfo(@PathVariable("resourceId") Long resourceId) {
         return success(resourceService.selectResourceByResourceId(resourceId));
     }
-    @javax.annotation.Resource
-    @Autowired
-    com.qwq.resource.mapper.VideoMapper VideoMapper;
+
+    @PutMapping("/updateLearnTime")
+    public AjaxResult updateLearnTime(@RequestBody LearnTime learnTime)
+    {
+        return toAjax(resourceService.updateLearnTime(learnTime));
+    }
     @GetMapping("/video/{videoId}")
     public void videoPreview(HttpServletRequest request, HttpServletResponse response, @PathVariable("videoId") String videoId) throws Exception
     {
-
-
-//        if (!FileUtils.checkAllowDownload(resource))
-//        {
-//            throw new Exception(com.qwq.common.utils.StringUtils.format("资源文件({})非法，不允许下载。 ", resource));
-//        }
         // 本地资源路径
         String localPath = RuoYiConfig.getProfile();
-        Video videoPathList = VideoMapper.SelectVideoById(Integer.parseInt(videoId));
-        String videoPathUrl = videoPathList.getVideoUrl();
+        Resource videoPathList = resourceService.selectResourceByResourceId(Long.parseLong(videoId));
+        String videoPathUrl = videoPathList.getFilePath();
         String downloadPath = localPath + com.qwq.common.utils.StringUtils.substringAfter(videoPathUrl, Constants.RESOURCE_PREFIX);
 
         Path filePath = Paths.get(downloadPath);
