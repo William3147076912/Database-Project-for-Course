@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.qwq.assignment.domain.Assignment;
 import com.qwq.submission.domain.Submission;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * 作业/考试Mapper接口
