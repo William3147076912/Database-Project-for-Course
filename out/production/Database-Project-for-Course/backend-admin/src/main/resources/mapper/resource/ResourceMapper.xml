@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qwq.resource.mapper.ResourceMapper">
+    
+    <resultMap type="Resource" id="ResourceResult">
+        <result property="resourceId"    column="resource_id"    />
+        <result property="courseId"    column="course_id"    />
+        <result property="uploaderId"    column="uploader_id"    />
+        <result property="resourceName"    column="resource_name"    />
+        <result property="filePath"    column="file_path"    />
+        <result property="resourceType"    column="resource_type"    />
+        <result property="uploadTime"    column="upload_time"    />
+    </resultMap>
+
+    <sql id="selectResourceVo">
+        select resource_id, course_id, uploader_id, resource_name, file_path, resource_type, upload_time from resource
+    </sql>
+
+    <select id="selectResourceList" parameterType="Resource" resultMap="ResourceResult">
+        <include refid="selectResourceVo"/>
+        <where>  
+            <if test="courseId != null "> and course_id = #{courseId}</if>
+            <if test="uploaderId != null "> and uploader_id = #{uploaderId}</if>
+            <if test="resourceName != null  and resourceName != ''"> and resource_name like concat('%', #{resourceName}, '%')</if>
+            <if test="resourceType != null  and resourceType != ''"> and resource_type = #{resourceType}</if>
+        </where>
+    </select>
+    
+    <select id="selectResourceByResourceId" parameterType="Long" resultMap="ResourceResult">
+        <include refid="selectResourceVo"/>
+        where resource_id = #{resourceId}
+    </select>
+
+    <insert id="insertResource" parameterType="Resource" useGeneratedKeys="true" keyProperty="resourceId">
+        insert into resource
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="courseId != null">course_id,</if>
+            <if test="uploaderId != null">uploader_id,</if>
+            <if test="resourceName != null and resourceName != ''">resource_name,</if>
+            <if test="filePath != null">file_path,</if>
+            <if test="resourceType != null and resourceType != ''">resource_type,</if>
+            <if test="uploadTime != null">upload_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="courseId != null">#{courseId},</if>
+            <if test="uploaderId != null">#{uploaderId},</if>
+            <if test="resourceName != null and resourceName != ''">#{resourceName},</if>
+            <if test="filePath != null">#{filePath},</if>
+            <if test="resourceType != null and resourceType != ''">#{resourceType},</if>
+            <if test="uploadTime != null">#{uploadTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateResource" parameterType="Resource">
+        update resource
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="courseId != null">course_id = #{courseId},</if>
+            <if test="uploaderId != null">uploader_id = #{uploaderId},</if>
+            <if test="resourceName != null and resourceName != ''">resource_name = #{resourceName},</if>
+            <if test="filePath != null">file_path = #{filePath},</if>
+            <if test="resourceType != null and resourceType != ''">resource_type = #{resourceType},</if>
+            <if test="uploadTime != null">upload_time = #{uploadTime},</if>
+        </trim>
+        where resource_id = #{resourceId}
+    </update>
+
+    <delete id="deleteResourceByResourceId" parameterType="Long">
+        delete from resource where resource_id = #{resourceId}
+    </delete>
+
+    <delete id="deleteResourceByResourceIds" parameterType="String">
+        delete from resource where resource_id in 
+        <foreach item="resourceId" collection="array" open="(" separator="," close=")">
+            #{resourceId}
+        </foreach>
+    </delete>
+</mapper>
