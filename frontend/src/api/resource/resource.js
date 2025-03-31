@@ -42,3 +42,18 @@ export function delResource(resourceId) {
     method: 'delete'
   })
 }
+export function getVideo(videoUrl){
+  return request({
+    url: videoUrl,
+    method: 'get',
+    responseType: 'blob'
+  })
+}
+
+export function updateLearningTime(data){
+  return request({
+    url: '/resource/resource/updateLearnTime',
+    method: 'put',
+    data: data
+  })
+}

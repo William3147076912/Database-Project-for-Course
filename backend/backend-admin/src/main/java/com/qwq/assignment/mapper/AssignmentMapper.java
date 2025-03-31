@@ -12,6 +12,7 @@ import org.apache.ibatis.annotations.Mapper;
  * @author william
  * @date 2025-03-13
  */
+@Mapper
 public interface AssignmentMapper {
     /**
      * 查询作业/考试

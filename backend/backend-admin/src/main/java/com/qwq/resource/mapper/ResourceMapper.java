@@ -2,6 +2,7 @@ package com.qwq.resource.mapper;
 
 import java.util.List;
 import com.qwq.resource.domain.Resource;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * 教学资源Mapper接口
@@ -9,6 +10,7 @@ import com.qwq.resource.domain.Resource;
  * @author william
  * @date 2025-03-09
  */
+@Mapper
 public interface ResourceMapper 
 {
     /**

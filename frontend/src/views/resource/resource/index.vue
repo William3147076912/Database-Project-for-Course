@@ -101,7 +101,12 @@
                      v-hasPermi="['resource:resource:remove']">删除
           </el-button>
           <el-button link type="primary" icon="download"
-                     @click="handleDownload(scope.row)">下载
+                     @click="()=>{handleDownload(scope.row);startTimer();}">下载
+          </el-button>
+          <el-button link type="primary" icon="download"  v-if="scope.row.resourceType!=='Video'" @click="()=>{showResource(scope.row);}">在线学习
+          </el-button>
+          <el-button link type="primary" icon="Search" v-if="scope.row.resourceType==='Video'"
+                     @click="handleVideoPlay(scope.row)">在线播放
           </el-button>
         </template>
       </el-table-column>
@@ -115,6 +120,28 @@
         @pagination="getList"
     />
 
+    <p>{{learnTime.userId}}</p>
+    <p>{{learnTime.resourceId}}</p>
+    <p>{{learnTime.learnTime}}</p>
+    <el-dialog
+        :modal="false"
+        title="视频播放"
+        @close="handleDialogClose()"
+        v-model="videoDialog"
+        width="40%">
+      <p>{{ videoName }}</p>
+      <video :src="videoUrl"
+             controls="controls"
+             width="100%"
+             @play="startTimer()"
+             @pause="stopTimer()"
+             @timeupdate="updateVideoCurrentTime"
+             @loadedmetadata="onVideoLoadedMetadata"
+             @ended="onVideoEnded()"
+             ></video>
+      <p>{{formattedTime}}</p>
+      <p>{{totalSeconds}}</p>
+    </el-dialog>
     <!-- 添加或修改教学资源对话框 -->
     <el-dialog :title="title" v-model="open" width="500px" append-to-body>
       <el-form ref="resourceRef" :model="form" :rules="rules" label-width="80px">
@@ -160,25 +187,30 @@
         </div>
       </template>
     </el-dialog>
-
   </div>
 </template>
 
 <script setup name="Resource">
 import {listCourse} from "@/api/course/course.js";
-
-const baseURL = import.meta.env.VITE_APP_BASE_API
-import {UploadFilled} from '@element-plus/icons-vue'
 import {listResource, getResource, delResource, addResource, updateResource} from "@/api/resource/resource";
 import useUserStore from "@/store/modules/user.js";
 import FileUpload from "@/components/FileUpload/index.vue";
 import download from "@/plugins/download.js";
+import {ref, computed} from 'vue';
+import {getVideo} from "@/api/resource/resource.js";
+import {updateLearningTime} from "../../../api/resource/resource.js";
 
 const {proxy} = getCurrentInstance();
 const {resource_type} = proxy.useDict('resource_type');
-
 const resourceList = ref([]);
 const open = ref(false);
+const videoDialog = ref(false);
+const videoName = ref('');
+const videoUrl = ref( '/resource/resource/video');
+const videoId = ref('');
+const currentResourceId=ref('');
+const currentVideoDuration = ref(0);
+const videoCurrentTime = ref(0);
 const loading = ref(true);
 const showSearch = ref(true);
 const ids = ref([]);
@@ -186,6 +218,10 @@ const single = ref(true);
 const multiple = ref(true);
 const total = ref(0);
 const title = ref("");
+const isRunning = ref(false);
+const startTime = ref(null);
+const elapsedTime = ref(0);
+const totalSeconds = ref(0);
 
 const data = reactive({
   form: {},
@@ -216,6 +252,12 @@ const data = reactive({
   }
 });
 const {queryParams, form, rules} = toRefs(data);
+const learnTime=reactive({
+  studentId:useUserStore().userId,
+  resourceId:null,
+  learnTime:0,
+  Finished:false
+})
 const courseList = ref([]);
 
 function getCourseList() {
@@ -231,7 +273,6 @@ function getCourseList() {
 }
 
 getCourseList()
-
 
 /** 查询教学资源列表 */
 function getList() {
@@ -300,6 +341,66 @@ function handleUpdate(row) {
   });
 }
 
+function handleVideoPlay(row) {
+  videoDialog.value = true
+  videoName.value = row.resourceName;
+  videoId.value = row.resourceId;
+  currentResourceId.value=row.resourceId;
+  videoUrl.value = '/resource/resource/video/'+row.resourceId
+  // 请求视频数据
+  getVideo(videoUrl.value).then(response => {
+    const videoBlob = new Blob([response], {type: 'video/mp4'}); // 假设视频类型为mp4
+    videoUrl.value = URL.createObjectURL(videoBlob);
+  }).catch(error => {
+    console.error('获取视频失败:', error);
+  });
+}
+function onVideoLoadedMetadata(event) {
+  const video = event.target;
+  console.log('视频时长:', video.duration);
+  // 输出视频时长到控制台
+  // 你可以在这里将视频时长赋值给某个响应式变量，以便在模板中使用
+  currentVideoDuration.value=video.duration;
+}
+// const videoPlay=ref(false);
+// function handleVideoClick() {
+//   if(videoPlay===false)
+//   {
+//     startTimer();
+//     videoPlay.value=true;
+//   }else
+//   {
+//     stopTimer();
+//     videoPlay.value=false;
+//   }
+//   console.log('视频被点击了');
+//   // 在这里添加你想要执行的逻辑，比如播放视频
+// }
+function updateVideoCurrentTime(event) {
+  videoCurrentTime.value = event.target.currentTime;
+
+}
+function onVideoEnded() {
+  // 在这里添加你想要执行的逻辑，比如关闭对话框、显示提示信息等
+  learnTime.Finished=true;
+  alert("完成");
+}
+function handleDialogClose() {
+  console.log('视频播放对话框已关闭');
+  // 在这里添加你想要执行的逻辑，比如重置某些状态
+  stopTimer(); // 停止计时器
+  if(totalSeconds!==0)
+  {
+    learnTime.studentId=useUserStore().id;
+    learnTime.learnTime=totalSeconds;
+    learnTime.resourceId=currentResourceId.value;
+    updateLearningTime(learnTime);
+    learnTime.Finished=false;
+    resetTimer();
+  }
+}
+
+
 /** 提交按钮 */
 function submitForm() {
   proxy.$refs["resourceRef"].validate(async valid => {
@@ -349,4 +450,35 @@ function handleExport() {
 }
 
 getList();
+
+
+
+const formattedTime = computed(() => {
+  totalSeconds.value = Math.floor(elapsedTime.value / 1000);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds.value % 60;
+  return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+});
+
+const startTimer = () => {
+  isRunning.value = true;
+  startTime.value = Date.now() - elapsedTime.value;
+  requestAnimationFrame(updateTimer);
+};
+
+const stopTimer = () => {
+  isRunning.value = false;
+};
+
+const updateTimer = () => {
+  if (isRunning.value) {
+    elapsedTime.value = Date.now() - startTime.value;
+    requestAnimationFrame(updateTimer);
+  }
+};
+const resetTimer = () => {
+  totalSeconds.value= 0;
+  elapsedTime.value = 0;
+  startTime.value = Date.now();
+};
 </script>

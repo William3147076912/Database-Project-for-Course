@@ -2,6 +2,7 @@ package com.qwq.resource.service;
 
 import java.util.List;
 
+import com.qwq.resource.domain.LearnTime;
 import com.qwq.resource.domain.Resource;
 import com.qwq.resource.domain.vo.ResourceVO;
 
@@ -59,4 +60,6 @@ public interface IResourceService {
      * @return 结果
      */
     public int deleteResourceByResourceId(Long resourceId);
+
+    int updateLearnTime(LearnTime learnTime);
 }
