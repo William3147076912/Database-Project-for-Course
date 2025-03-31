@@ -25,8 +25,11 @@ public class LearningController extends BaseController {
     }
 
     @PostMapping("/updatePlan")
-    public boolean updateLearningPlan(@RequestParam Integer studentId, @RequestParam Integer courseId, @RequestParam String plan) {
-        System.out.println("will" + studentId + ", courseId: " + courseId + ", plan: " + plan);
+    public boolean updateLearningPlan(@RequestBody Learning learning) {
+        Integer studentId = learning.getStudentId();
+        Integer courseId = learning.getCourseId();
+        String plan = learning.getPlan();
+        System.out.println("studentId: " + studentId + ", courseId: " + courseId + ", plan: " + plan);
         return learningService.updateLearningPlan(studentId, courseId, plan);
     }
 }

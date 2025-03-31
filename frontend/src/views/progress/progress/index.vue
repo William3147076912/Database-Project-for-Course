@@ -31,7 +31,7 @@
       </el-table-column>
     </el-table>
 
-    <el-pagination
+    <pagination
         v-show="total>0"
         :total="total"
         v-model:page="queryParams.pageNum"
@@ -39,19 +39,20 @@
         @pagination="getList"
     />
 
-    <el-dialog :visible.sync="planFormVisible" title="学习计划">
-      <template #content>
-        <el-form :model="planFormData" ref="planFormRef">
-          <el-form-item label="学习计划" prop="plan">
-            <el-input v-model="planFormData.plan"/>
-          </el-form-item>
-        </el-form>
-      </template>
+    <el-dialog v-model="dialogFormVisible" title="学习计划" width="500">
+      <el-form :model="form">
+        <el-form-item>
+          <el-input v-model="form.plan" autocomplete="off" type="textarea" rows="25"/>
+        </el-form-item>
+      </el-form>
       <template #footer>
-        <el-button @click="planFormVisible = false">取消</el-button>
-        <el-button type="primary" @click="submitPlanForm">提交</el-button>
+        <div class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">取消</el-button>
+          <el-button type="primary" @click="submitPlanForm">确认</el-button>
+        </div>
       </template>
     </el-dialog>
+
   </div>
 </template>
 
@@ -62,6 +63,9 @@ import axios from 'axios';
 import useUserStore from "@/store/modules/user.js";
 import request from "@/utils/request.js";
 
+const dialogTableVisible = ref(false)
+const dialogFormVisible = ref(false)
+const formLabelWidth = '140px'
 // 数据列表
 const learningList = ref([]);
 // 加载状态
@@ -85,6 +89,15 @@ const planFormRef = ref(null);
 
 // 假设这里的学生ID是固定的，实际应用中你可能需要从登录信息等获取
 const studentId = useUserStore().id;
+
+const form = reactive({
+  studentId: "", // 初始化为0，或者根据实际情况设置
+  courseId: "",  // 初始化为0，或者根据实际情况设置
+  courseName: "",
+  totalAssignments: "",
+  submittedAssignments: "",
+  plan: ""
+});
 
 // 查询参数
 const queryParams = reactive({
@@ -143,43 +156,35 @@ const handleSelectionChange = (selection) => {
   multiple.value =!selection.length;
 };
 
-// 分页大小变化事件
-function handleSizeChange(newSize) {
-  queryParams.pageSize = newSize;
-  getList();
-}
-
-// 分页当前页变化事件
-function handleCurrentChange(newPage) {
-  queryParams.pageNum = newPage;
-  getList();
-}
-
 // 打开学习计划表单
 function openPlanForm(row) {
-  planFormData.value = { ...row };
-  planFormVisible.value = true;
+  dialogFormVisible.value = true;
+  form.studentId = useUserStore().id;
+  form.courseId = row.courseId;
+  form.plan = row.plan;
+  console.log('打开表单时 form 数据:', form); // 添加调试语句
 }
 
 // 提交学习计划表单
 async function submitPlanForm() {
   try {
-    const response = await axios.post('/progress/updatePlan', {
-      studentId: planFormData.value.studentId,
-      courseId: planFormData.value.courseId,
-      plan: planFormData.value.plan
+    const response = await request({
+      url: '/progress/updatePlan',
+      method: 'post',
+      data: {
+        studentId: form.studentId,
+        courseId: form.courseId,
+        plan: form.plan
+      }
     });
-    if (response.data) {
-      console.log('学习计划更新成功');
-      alert('学习计划更新成功');
-      planFormVisible.value = false;
-      getList();
+    if (response) {
+      dialogFormVisible.value = false;
+      await getList();
     } else {
-      console.log('学习计划更新失败');
       alert('学习计划更新失败');
     }
   } catch (error) {
-    console.error('更新学习计划失败', error);
+    console.error('学习计划更新失败', error);
   }
 }
 
