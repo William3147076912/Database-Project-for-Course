@@ -16,4 +16,14 @@
         </if>
         group by sys_user.user_id,sys_user.user_name
     </select>
+    <select id="assignmentCount" parameterType="Long" resultType="Long">
+        select count(*) from (sys_user left join course on sys_user.user_id=course.creator_id)
+            left join assignment on assignment.course_id=course.course_id
+            where sys_user.user_id=#{teacherId}
+    </select>
+    <select id="resourceCount" parameterType="Long" resultType="Long">
+        select count(*) from (sys_user left join course on sys_user.user_id=course.creator_id)
+                                 left join resource on resource.course_id=course.course_id
+        where sys_user.user_id=#{teacherId}
+    </select>
 </mapper>

@@ -12,4 +12,8 @@ public interface TeacherMapper {
     Long courseCount(Long teacherId);
 
     List<Teacher> listTeacher(Teacher teacher);
+
+    Long assignmentCount(Long teacherId);
+
+    Long resourceCount(Long teacherId);
 }

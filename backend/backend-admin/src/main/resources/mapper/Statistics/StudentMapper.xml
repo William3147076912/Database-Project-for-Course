@@ -16,7 +16,10 @@
     <select id="learningTime" parameterType="Long" resultType="Long">
         select sum(learn_time) from sys_user left join learn_time on sys_user.user_id = learn_time.student_id where user_id = #{userId} group by user_id
     </select>
-    <select id="listStudentScore" parameterType="Long">
+    <resultMap id="studentScoreMap" type="map">
+    </resultMap>
+
+    <select id="listStudentScore" parameterType="Long" resultMap="studentScoreMap">
         select assignment.title, submission.score
         from  assignment left join submission on assignment.assignment_id = submission.assignment_id
         where submission.student_id = #{studentId} and submission.score is not null;
