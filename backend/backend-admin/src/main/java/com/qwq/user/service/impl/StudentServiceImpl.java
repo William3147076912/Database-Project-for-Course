@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class StudentServiceImpl implements IStudentService {
@@ -27,5 +28,9 @@ public class StudentServiceImpl implements IStudentService {
     @Override
     public Long LearningTime(Long studentId) {
         return studentMapper.learningTime(studentId);
+    }
+    @Override
+    public List<Map<String,Object>> listStudentScore(Long studentId) {
+        return studentMapper.listStudentScore(studentId);
     }
 }

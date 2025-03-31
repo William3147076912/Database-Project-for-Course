@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/userStatistics")
@@ -31,5 +32,10 @@ public class UserController extends BaseController {
     public TableDataInfo student(Student student){
         List<Student> students = studentService.listStudent(student);
         return getDataTable(students);
+    }
+    @GetMapping("/listScore")
+    public TableDataInfo listScore(Long studentId){
+        List<Map<String,Object>> AssignmentScore = studentService.listStudentScore(studentId);
+        return getDataTable(AssignmentScore);
     }
 }

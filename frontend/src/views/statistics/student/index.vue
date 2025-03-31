@@ -41,7 +41,7 @@
     </el-row>
     <el-table v-loading="loading" :data="studentList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="教师id" align="center" prop="userId"/>
+      <el-table-column label="学生id" align="center" prop="userId"/>
       <el-table-column label="学生姓名" align="center" prop="userName"/>
       <el-table-column
           label="学习时长"
@@ -52,11 +52,11 @@
           {{ formattedTime(scope.row.learningTime) }}
         </template>
       </el-table-column>
-      <el-table-column label="成绩" align="center" prop="score"/>
+<!--      <el-table-column label="成绩" align="center" prop="score"/>-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-button link type="primary" icon="Search" @click="handleInfo(scope.row)"
-                     v-hasPermi="['course:course:list']">查看
+                     v-hasPermi="['course:course:list']">查看成绩
           </el-button>
         </template>
       </el-table-column>
@@ -69,14 +69,17 @@
         v-model:limit="queryParams.pageSize"
         @pagination="getList"
     />
-
+<!--  <p>{{form2.value}}</p>-->
     <!-- 查看课程管理详情对话框 -->
     <el-dialog title="学生信息"  v-model="infoOpen" width="800px" append-to-body>
       <!--使用el-descriptions组件以卡片形式展示信息，更简洁-->
       <el-descriptions :column="1" border>
         <el-descriptions-item label="学生姓名">{{ form.userName }}</el-descriptions-item>
         <el-descriptions-item label="学习时长">{{ form.learningTime }}秒</el-descriptions-item>
-        <el-descriptions-item label="成绩">{{ form.score }}</el-descriptions-item>
+<!--        <el-descriptions-item label="成绩">{{ form.score }}</el-descriptions-item>-->
+        <el-descriptions-item v-for="(item, index) in form2.value" :key="index" :label="item.title">
+          {{ item.score }}
+        </el-descriptions-item>
       </el-descriptions>
     </el-dialog>
   </div>
@@ -85,6 +88,7 @@
 <script setup name="Course">
 import {listStudent} from "@/api/statistics/student.js";
 import {computed} from "vue";
+import {listScore} from "../../../api/statistics/student.js";
 
 const {proxy} = getCurrentInstance();
 const {course_status} = proxy.useDict('course_status');
@@ -117,7 +121,7 @@ const data = reactive({
 });
 
 const {queryParams, form, rules} = toRefs(data);
-
+const form2 = reactive([])
 async function getList() {
   loading.value = true;
   await listStudent(queryParams.value).then(response => {
@@ -151,13 +155,23 @@ function handleSelectionChange(selection) {
   single.value = selection.length != 1;
   multiple.value = !selection.length;
 }
-
-/** 新增按钮操作 */
+function reset() {
+  form2.value = {
+    title:null,
+    score:null
+  };
+}
 
 /* 查看详情操作 */
 function handleInfo(row) {
+  // reset();
+  listScore({studentId:row.userId}).then(
+      response=>{
+        form2.value=response.rows;
+        infoOpen.value = true;
+      }
+  )
   form.value=row;
-  infoOpen.value = true;
 }
 /** 导出按钮操作 */
 function handleExport() {

@@ -8,3 +8,11 @@ export function listStudent(query) {
         params: query
     })
 }
+export function listScore(query) {
+    return request({
+        url: '/userStatistics/listScore',
+        method: 'get',
+        params: query
+    })
+}
+
