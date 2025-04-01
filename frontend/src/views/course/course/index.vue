@@ -312,8 +312,10 @@ async function getList() {
   loading.value = true;
   // 如果当前用户是学生则取得当前用户已经选了的课有哪些
   if (useUserStore().roles[0] === 'student')
-    await listEnrollment(useUserStore().id).then(response => {
+    console.log("当前用户是学生"+useUserStore().id)
+    await listEnrollment({studentId:useUserStore().id}).then(response => {
       selectedCourseList.value = response.rows.map(item => item.courseId);
+      console.log("当前用户已经选了的课有哪些"+JSON.stringify(selectedCourseList.value));
       // console.log(JSON.stringify(selectedCourseList.value));
     });
   await listCourse(queryParams.value).then(response => {
@@ -479,7 +481,7 @@ const unselectCourse = (course) => {
     return;
   }
   proxy.$modal.confirm('是否确认退选"' + course.name + '？').then(function () {
-    return delEnrollmentByCourseId(course.courseId);
+    return delEnrollmentByCourseId({courseId:course.courseId,studentId:useUserStore().id});
   }).then(() => {
     getList();
     proxy.$modal.msgSuccess("退选成功");

@@ -3,6 +3,7 @@ package com.qwq.enrollment.mapper;
 import java.util.List;
 
 import com.qwq.enrollment.domain.CourseEnrollment;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 选课记录Mapper接口
@@ -59,5 +60,5 @@ public interface CourseEnrollmentMapper {
      */
     public int deleteCourseEnrollmentByEnrollmentIds(Long[] enrollmentIds);
 
-    int deleteCourseEnrollmentByCourseId(Long courseId);
+    int deleteCourseEnrollmentByCourseId(@Param("studentId") Long studentId, @Param("courseId") Long courseId);
 }
