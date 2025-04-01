@@ -312,7 +312,6 @@ async function getList() {
   loading.value = true;
   // 如果当前用户是学生则取得当前用户已经选了的课有哪些
   if (useUserStore().roles[0] === 'student')
-    console.log("当前用户是学生"+useUserStore().id)
     await listEnrollment({studentId:useUserStore().id}).then(response => {
       selectedCourseList.value = response.rows.map(item => item.courseId);
       console.log("当前用户已经选了的课有哪些"+JSON.stringify(selectedCourseList.value));
