@@ -408,6 +408,9 @@ function submitForm() {
           getList();
         });
       } else {
+        form.value.creatorId = useUserStore().id;
+        form.value.creationTime= new Date().getTime();
+        form.value.courseType="必修课";
         addCourse(form.value).then(response => {
           proxy.$modal.msgSuccess("新增成功");
           open.value = false;
