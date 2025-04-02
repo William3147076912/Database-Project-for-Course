@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface ITeacherService {
     List<Teacher> listTeacher(Teacher teacher);
-    String teachingQuality(Long teacherId);
+    String teachingQuality(Teacher teacherId);
 }

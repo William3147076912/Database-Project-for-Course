@@ -60,5 +60,5 @@ public interface ICourseEnrollmentService {
      */
     public int deleteCourseEnrollmentByEnrollmentId(Long enrollmentId);
 
-    int deleteCourseEnrollmentByCourseId(Long courseId);
+    int deleteCourseEnrollmentByCourseId(Long studentId,Long courseId);
 }

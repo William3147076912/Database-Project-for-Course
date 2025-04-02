@@ -107,7 +107,7 @@ public class CourseEnrollmentServiceImpl implements ICourseEnrollmentService {
      * @return 结果
      */
     @Override
-    public int deleteCourseEnrollmentByCourseId(Long courseId) {
-        return courseEnrollmentMapper.deleteCourseEnrollmentByCourseId(courseId);
+    public int deleteCourseEnrollmentByCourseId(Long studentId,Long courseId) {
+        return courseEnrollmentMapper.deleteCourseEnrollmentByCourseId(studentId,courseId);
     }
 }
