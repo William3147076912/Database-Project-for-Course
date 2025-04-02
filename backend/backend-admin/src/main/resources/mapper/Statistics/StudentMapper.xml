@@ -4,8 +4,13 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qwq.user.mapper.StudentMapper">
     <resultMap type="Student" id="StudentResult">
-        <result property="userId"    column="user_id"    />
-        <result property="userName"    column="user_name"    />
+        <result property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+    </resultMap>
+    <resultMap id="studentScoreMap" type="map">
+        <result column="student_id" property="studentId"/>
+        <result column="score" property="score"/>
+        <result column="subject_name" property="subjectName"/>
     </resultMap>
     <select id="selectStudentList" parameterType="Student" resultMap="StudentResult">
         select user_id, user_name from sys_user natural join sys_user_role where sys_user_role.role_id = 102
@@ -14,11 +19,16 @@
         </if>
     </select>
     <select id="learningTime" parameterType="Long" resultType="Long">
-        select sum(learn_time) from sys_user left join learn_time on sys_user.user_id = learn_time.student_id where user_id = #{userId} group by user_id
+        SELECT SUM(learn_time)
+        FROM sys_user
+                 LEFT JOIN learn_time ON sys_user.user_id = learn_time.student_id
+        WHERE user_id = #{userId}
+        GROUP BY user_id
     </select>
-    <select id="listStudentScore" parameterType="Long">
-        select assignment.title, submission.score
-        from  assignment left join submission on assignment.assignment_id = submission.assignment_id
-        where submission.student_id = #{studentId} and submission.score is not null;
+    <select id="listStudentScore" parameterType="Long" resultMap="studentScoreMap">
+        SELECT assignment.title, submission.score
+        FROM assignment
+                 LEFT JOIN submission ON assignment.assignment_id = submission.assignment_id
+        WHERE submission.student_id = #{studentId} AND submission.score IS NOT NULL;
     </select>
 </mapper>
