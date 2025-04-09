@@ -26,14 +26,13 @@ import com.qwq.common.core.page.TableDataInfo;
 
 /**
  * 课程管理Controller
- * 
+ *
  * @author william
  * @date 2025-03-09
  */
 @RestController
 @RequestMapping("/course/course")
-public class CourseController extends BaseController
-{
+public class CourseController extends BaseController {
     @Autowired
     private ICourseService courseService;
 
@@ -42,8 +41,7 @@ public class CourseController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('course:course:list')")
     @GetMapping("/list")
-    public TableDataInfo list(Course course)
-    {
+    public TableDataInfo list(Course course) {
         startPage();
         List<Course> list = courseService.selectCourseList(course);
         return getDataTable(list);
@@ -55,8 +53,7 @@ public class CourseController extends BaseController
     @PreAuthorize("@ss.hasPermi('course:course:export')")
     @Log(title = "课程管理", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, Course course)
-    {
+    public void export(HttpServletResponse response, Course course) {
         List<Course> list = courseService.selectCourseList(course);
         ExcelUtil<Course> util = new ExcelUtil<Course>(Course.class);
         util.exportExcel(response, list, "课程管理数据");
@@ -67,8 +64,7 @@ public class CourseController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('course:course:query')")
     @GetMapping(value = "/{courseId}")
-    public AjaxResult getInfo(@PathVariable("courseId") Long courseId)
-    {
+    public AjaxResult getInfo(@PathVariable("courseId") Long courseId) {
         return success(courseService.selectCourseByCourseId(courseId));
     }
 
@@ -78,8 +74,7 @@ public class CourseController extends BaseController
     @PreAuthorize("@ss.hasPermi('course:course:add')")
     @Log(title = "课程管理", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody Course course)
-    {
+    public AjaxResult add(@RequestBody Course course) {
         return toAjax(courseService.insertCourse(course));
     }
 
@@ -89,8 +84,7 @@ public class CourseController extends BaseController
     @PreAuthorize("@ss.hasPermi('course:course:edit')")
     @Log(title = "课程管理", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody Course course)
-    {
+    public AjaxResult edit(@RequestBody Course course) {
         return toAjax(courseService.updateCourse(course));
     }
 
@@ -99,16 +93,13 @@ public class CourseController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('course:course:remove')")
     @Log(title = "课程管理", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{courseIds}")
-    public AjaxResult remove(@PathVariable Long[] courseIds)
-    {
+    @DeleteMapping("/{courseIds}")
+    public AjaxResult remove(@PathVariable Long[] courseIds) {
         return toAjax(courseService.deleteCourseByCourseIds(courseIds));
     }
 
-    @PreAuthorize("@ss.hasPermi('course:course:enrollment')")
     @GetMapping("/statistics")
-    public TableDataInfo getCourseStatistics(Course course)
-    {
+    public TableDataInfo getCourseStatistics(Course course) {
         List<CourseWithStatistic> enrollmentCounts = courseService.selectCourseEnrollmentCount(course);
         return getDataTable(enrollmentCounts);
     }

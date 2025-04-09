@@ -7,6 +7,7 @@ import com.qwq.assignment.mapper.AssignmentMapper;
 import com.qwq.assignment.service.IAssignmentService;
 import com.qwq.common.core.domain.entity.SysUser;
 import com.qwq.common.utils.StringUtils;
+import com.qwq.course.domain.Course;
 import com.qwq.course.service.ICourseService;
 import com.qwq.submission.domain.Submission;
 import com.qwq.submission.service.ISubmissionService;
@@ -86,6 +87,7 @@ public class AssignmentServiceImpl implements IAssignmentService {
         List<Assignment> assignments = assignmentMapper.selectAssignmentList(assignment);
         List<AssignmentVO> assignmentVOS = BeanUtil.copyToList(assignments, AssignmentVO.class);
 
+
         // 将用户列表转换为Map，以用户ID为键，用户对象为值
         Map<Long, SysUser> userMap = userService.selectUserList(new SysUser()).stream()
                 .collect(Collectors.toMap(SysUser::getUserId, user -> user));
@@ -94,8 +96,15 @@ public class AssignmentServiceImpl implements IAssignmentService {
         Map<Long, String> courseMap = assignmentVOS.stream()
                 .map(AssignmentVO::getCourseId)
                 .distinct()
-                .collect(Collectors.toMap(courseId -> courseId,
-                        courseId -> courseService.selectCourseByCourseId(courseId).getName()));
+                .collect(Collectors.toMap(
+                        courseId -> courseId,
+                        courseId -> {
+                            Course course = courseService.selectCourseByCourseId(courseId);
+                            return (course != null) ? course.getName() : "未知课程"; // 处理 null 值
+                        }
+                ));
+
+        // 遍历 assignmentVOS，填充 creatorName 和 courseName
         assignmentVOS.forEach(assignmentVO -> {
             Long creatorId = assignmentVO.getCreatorId();
             if (userMap.containsKey(creatorId)) {
@@ -104,8 +113,11 @@ public class AssignmentServiceImpl implements IAssignmentService {
             Long courseId = assignmentVO.getCourseId();
             if (courseMap.containsKey(courseId)) {
                 assignmentVO.setCourseName(courseMap.get(courseId));
+            } else {
+                assignmentVO.setCourseName("未知课程"); // 处理 courseMap 中不存在的情况
             }
         });
+
         return assignmentVOS;
     }
 
@@ -132,8 +144,6 @@ public class AssignmentServiceImpl implements IAssignmentService {
     @Transactional
     @Override
     public int updateAssignment(Assignment assignment) {
-        assignmentMapper.deleteSubmissionByAssessmentId(assignment.getAssignmentId());
-        insertSubmission(assignment);
         return assignmentMapper.updateAssignment(assignment);
     }
 

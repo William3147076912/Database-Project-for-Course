@@ -101,6 +101,7 @@
                      v-hasPermi="['assignment:assignment:remove']">删除
           </el-button>
           <el-button link type="primary" icon="search" @click="handleUpdateOrSearch(scope.row)"
+                     v-if="useUserStore().roles.includes('student')"
           >查看
           </el-button>
           <el-button link type="primary" icon="Edit" @click="handleSubmit(scope.row)"
@@ -217,8 +218,8 @@
 
       </el-form>
       <template #footer>
-        <div class="dialog-footer">
-          <el-button type="primary" @click="submitForm">确 定</el-button>
+        <div class="dialog-footer"  v-if="useUserStore().roles.includes('teacher')">
+          <el-button type="primary" @click="submitForm" >确 定</el-button>
           <el-button @click="cancel">取 消</el-button>
         </div>
       </template>
@@ -428,7 +429,7 @@ function handleUpdateOrSearch(row) {
     form.value = response.data;
     submissionList.value = response.data.submissionList;
     open.value = true;
-    title.value = "修改任务";
+    title.value = useUserStore().roles.includes('teacher')  ? "修改任务" : "查看任务详情";
     // console.log(JSON.stringify(form.value))
   });
 }
