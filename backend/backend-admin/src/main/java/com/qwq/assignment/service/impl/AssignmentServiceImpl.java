@@ -146,8 +146,6 @@ public class AssignmentServiceImpl implements IAssignmentService {
     @Transactional
     @Override
     public int updateAssignment(Assignment assignment) {
-        assignmentMapper.deleteSubmissionByAssessmentId(assignment.getAssignmentId());
-        insertSubmission(assignment);
         return assignmentMapper.updateAssignment(assignment);
     }
 
