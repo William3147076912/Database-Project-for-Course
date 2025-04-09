@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qwq.resource.mapper.LearnTimeMapper">
+
+    <resultMap type="LearnTime" id="LearnTimeResult">
+        <result property="studentId"    column="student_id"    />
+        <result property="resourceId"    column="resource_id"    />
+        <result property="learnTime"    column="learn_time"    />
+        <result property="Finished" column="if_finished" />
+    </resultMap>
+
+    <select id="selectLearnTime" parameterType="LearnTime" resultMap="LearnTimeResult" resultType="LearnTime">
+        select * from learn_time where student_id = #{studentId} and resource_id = #{resourceId};
+    </select>
+
+    <insert id="insertLearnTime" parameterType="LearnTime" useGeneratedKeys="true" keyProperty="studentId">
+        insert into learn_time
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="studentId != null">student_id,</if>
+            <if test="resourceId != null">resource_id,</if>
+            <if test="learnTime != null">learn_time,</if>
+            <if test="Finished != null">if_finished,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="studentId != null">#{studentId},</if>
+                <if test="resourceId != null">#{resourceId},</if>
+                <if test="learnTime != null">#{learnTime},</if>
+                <if test="Finished != null">#{Finished},</if>
+        </trim>
+    </insert>
+    <update id="updateLearnTime" parameterType="LearnTime">
+        update learn_time
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="studentId != null">student_id = #{studentId},</if>
+            <if test="resourceId != null">resource_id = #{resourceId},</if>
+            <if test="learnTime != null">learn_time = #{learnTime},</if>
+            <if test="Finished != null">if_finished = #{Finished},</if>
+        </trim>
+        where student_id = #{studentId} and resource_id = #{resourceId};
+    </update>
+</mapper>

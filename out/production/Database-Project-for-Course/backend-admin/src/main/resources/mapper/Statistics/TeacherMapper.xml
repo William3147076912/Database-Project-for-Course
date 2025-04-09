@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qwq.user.mapper.TeacherMapper">
+
+    <resultMap type="Teacher" id="TeacherResult">
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="courseCount" column="courseCount"/>
+    </resultMap>
+    <select id="listTeacher" parameterType="Teacher" resultMap="TeacherResult">
+        select user_id,user_name,count(course_id) as courseCount from sys_user natural join sys_user_role left join course on sys_user.user_id=course.creator_id where (role_id=101 or role_id=100)
+        <if test="userName != null and userName != ''">
+            and sys_user.user_name like concat('%', #{userName}, '%')
+        </if>
+        group by sys_user.user_id,sys_user.user_name
+    </select>
+    <select id="assignmentCount" parameterType="Long" resultType="Long">
+        select count(*) from (sys_user left join course on sys_user.user_id=course.creator_id)
+            left join assignment on assignment.course_id=course.course_id
+            where sys_user.user_id=#{teacherId}
+    </select>
+    <select id="resourceCount" parameterType="Long" resultType="Long">
+        select count(*) from (sys_user left join course on sys_user.user_id=course.creator_id)
+                                 left join resource on resource.course_id=course.course_id
+        where sys_user.user_id=#{teacherId}
+    </select>
+</mapper>
