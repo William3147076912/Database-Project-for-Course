@@ -117,10 +117,10 @@
         </foreach>
     </delete>
 
-    <delete id="deleteCourseEnrollmentByCourseId" parameterType="Long">
+    <delete id="deleteCourseEnrollmentByCourseId" parameterType="map">
         delete from course_enrollment
-        <if test="courseId != null">
-            where course_id = #{courseId}
+        <if test="courseId != null and studentId !=null">
+            where course_id = #{courseId} and student_id = #{studentId}
         </if>
     </delete>
 </mapper>

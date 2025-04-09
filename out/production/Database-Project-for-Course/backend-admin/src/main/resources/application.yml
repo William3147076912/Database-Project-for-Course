@@ -105,7 +105,6 @@ mybatis:
   mapperLocations: classpath*:mapper/**/*Mapper.xml
   # 加载全局的配置文件
   configLocation: classpath:mybatis/mybatis-config.xml
-
 # PageHelper分页插件
 pagehelper:
   helperDialect: mysql
@@ -124,6 +123,6 @@ xss:
   # 过滤开关
   enabled: true
   # 排除链接（多个用逗号分隔）
-  excludes: /system/notice
+  excludes: /system/notice,/SelectVideo/*
   # 匹配链接
   urlPatterns: /system/*,/monitor/*,/tool/*

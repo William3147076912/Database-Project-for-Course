@@ -140,7 +140,7 @@ public class CourseServiceImpl implements ICourseService {
             flag=true;
             for (Long resourceId:resources)
             {
-                if(!courseMapper.studentFinishResource(studentId,resourceId))
+                if(courseMapper.studentFinishResource(studentId,resourceId)==null)
                 {
                     flag=false;
                     break;

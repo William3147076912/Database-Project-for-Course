@@ -75,7 +75,7 @@
       <!--使用el-descriptions组件以卡片形式展示信息，更简洁-->
       <el-descriptions :column="1" border>
         <el-descriptions-item label="学生姓名">{{ form.userName }}</el-descriptions-item>
-        <el-descriptions-item label="学习时长">{{ form.learningTime }}秒</el-descriptions-item>
+        <el-descriptions-item label="学习时长">{{ form.learningTime===null?0+"秒": formattedTime(form.learningTime)}}</el-descriptions-item>
 <!--        <el-descriptions-item label="成绩">{{ form.score }}</el-descriptions-item>-->
         <el-descriptions-item v-for="(item, index) in form2.value" :key="index" :label="item.title">
           {{ item.score }}
