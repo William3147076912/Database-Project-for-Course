@@ -122,7 +122,7 @@
 
     <p>{{learnTime.userId}}</p>
     <p>{{learnTime.resourceId}}</p>
-    <p>{{learnTime.learnTime}}</p>
+<!--    <p>{{learnTime.learnTime}}</p>-->
     <el-dialog
         :modal="false"
         title="视频播放"
