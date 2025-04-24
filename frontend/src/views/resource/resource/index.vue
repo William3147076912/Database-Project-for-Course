@@ -77,7 +77,7 @@
     <el-table v-loading="loading" :data="resourceList" @selection-change="handleSelectionChange">
       <!--<el-table-column type="selection" width="55" align="center"/>-->
       <!--<el-table-column label="资源ID" align="center" prop="resourceId" />-->
-      <el-table-column label="文件名称" align="center" prop="resourceName"/>
+      <el-table-column label="文件名称" align="center" prop="resourceName" />
       <el-table-column label="所属课程" align="center" prop="name"/>
       <el-table-column label="上传资源的教师" align="center" prop="createdBy"/>
       <el-table-column label="资源类型" align="center" prop="resourceType">
@@ -103,8 +103,8 @@
           <el-button link type="primary" icon="download"
                      @click="()=>{handleDownload(scope.row);startTimer();}">下载
           </el-button>
-          <el-button link type="primary" icon="download"  v-if="scope.row.resourceType!=='Video'" @click="()=>{showResource(scope.row);}">在线学习
-          </el-button>
+          <!--<el-button link type="primary" icon="download"  v-if="scope.row.resourceType!=='Video'" @click="()=>{showResource(scope.row);}">在线学习-->
+          <!--</el-button>-->
           <el-button link type="primary" icon="Search" v-if="scope.row.resourceType==='Video'"
                      @click="handleVideoPlay(scope.row)">在线播放
           </el-button>
@@ -120,8 +120,8 @@
         @pagination="getList"
     />
 
-    <p>{{learnTime.userId}}</p>
-    <p>{{learnTime.resourceId}}</p>
+    <!--<p>{{learnTime.userId}}</p>-->
+    <!--<p>{{learnTime.resourceId}}</p>-->
 <!--    <p>{{learnTime.learnTime}}</p>-->
     <el-dialog
         :modal="false"
@@ -139,8 +139,8 @@
              @loadedmetadata="onVideoLoadedMetadata"
              @ended="onVideoEnded()"
              ></video>
-      <p>{{formattedTime}}</p>
-      <p>{{totalSeconds}}</p>
+      <!--<p>{{formattedTime}}</p>-->
+      <!--<p>{{totalSeconds}}</p>-->
     </el-dialog>
     <!-- 添加或修改教学资源对话框 -->
     <el-dialog :title="title" v-model="open" width="500px" append-to-body>

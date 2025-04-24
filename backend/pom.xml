@@ -241,12 +241,12 @@
     </dependencyManagement>
 
     <modules>
-        <module>backend-admin</module>
-        <module>backend-framework</module>
-        <module>backend-system</module>
-        <module>backend-quartz</module>
-        <module>backend-generator</module>
-        <module>backend-common</module>
+        <module>qwq-admin</module>
+        <module>qwq-framework</module>
+        <module>qwq-system</module>
+        <module>qwq-quartz</module>
+        <module>qwq-generator</module>
+        <module>qwq-common</module>
     </modules>
     <packaging>pom</packaging>
 
